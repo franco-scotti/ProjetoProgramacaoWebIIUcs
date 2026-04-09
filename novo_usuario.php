@@ -4,6 +4,16 @@ $page_title = "Demo : Inserção de Usuário";
 include_once "layout_header.php";
  ?>
  <section>
+<?php
+$erro = @$_GET["erro"];
+if ($erro === "login_duplicado") {
+    echo "<div class='alert alert-danger'>Esse login j&aacute; existe. Escolha outro.</div>";
+} elseif ($erro === "campos_obrigatorios") {
+    echo "<div class='alert alert-warning'>Preencha login, senha e nome.</div>";
+} elseif ($erro === "erro_insercao") {
+    echo "<div class='alert alert-danger'>N&atilde;o foi poss&iacute;vel inserir o usu&aacute;rio.</div>";
+}
+?>
 <form action="insere_usuario.php" method="get">
     <table class='table table-hover table-responsive table-bordered'>
          <tr>

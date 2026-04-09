@@ -16,9 +16,9 @@ class PostgresUsuarioDao extends PostgresDao implements UsuarioDao {
         $stmt = $this->conn->prepare($query);
 
         // bind values 
-        $stmt->bindParam(":login", $usuario->getLogin());
-        $stmt->bindParam(":senha", $usuario->getSenha());
-        $stmt->bindParam(":nome", $usuario->getNome());
+        $stmt->bindValue(":login", $usuario->getLogin());
+        $stmt->bindValue(":senha", $usuario->getSenha());
+        $stmt->bindValue(":nome", $usuario->getNome());
 
         if($stmt->execute()){
             return true;
@@ -58,10 +58,10 @@ class PostgresUsuarioDao extends PostgresDao implements UsuarioDao {
         $stmt = $this->conn->prepare($query);
 
         // bind parameters
-        $stmt->bindParam(":login", $usuario->getLogin());
-        $stmt->bindParam(":senha", $usuario->getSenha());
-        $stmt->bindParam(":nome", $usuario->getNome());
-        $stmt->bindParam(':id', $usuario->getId());
+        $stmt->bindValue(":login", $usuario->getLogin());
+        $stmt->bindValue(":senha", $usuario->getSenha());
+        $stmt->bindValue(":nome", $usuario->getNome());
+        $stmt->bindValue(':id', $usuario->getId());
 
         // execute the query
         if($stmt->execute()){
