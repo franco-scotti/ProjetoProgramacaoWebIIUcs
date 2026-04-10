@@ -2,6 +2,13 @@
 
 include_once('DaoFactory.php');
 include_once('PostgresUsuarioDao.php');
+include_once('PostgresFornecedorDao.php');
+include_once('PostgresClienteDao.php');
+include_once('PostgresEnderecoDao.php');
+include_once('PostgresProdutoDao.php');
+include_once('PostgresEstoqueDao.php');
+include_once('PostgresPedidoDao.php');
+include_once('PostgresItemPedidoDao.php');
 
 class PostgresDaofactory extends DaoFactory {
 
@@ -10,7 +17,7 @@ class PostgresDaofactory extends DaoFactory {
     private $db_name = "PHP_tutorial";
     private $port = "5432";
     private $username = "postgres";
-    private $password = "1234";
+    private $password = "ucs";
     public $conn;
   
     // get the database connection
@@ -31,6 +38,48 @@ class PostgresDaofactory extends DaoFactory {
     public function getUsuarioDao() {
 
         return new PostgresUsuarioDao($this->getConnection());
+
+    }
+
+    public function getFornecedorDao() {
+
+        return new PostgresFornecedorDao($this->getConnection());
+
+    }
+
+    public function getClienteDao() {
+
+        return new PostgresClienteDao($this->getConnection());
+
+    }
+
+    public function getEnderecoDao() {
+
+        return new PostgresEnderecoDao($this->getConnection());
+
+    }
+
+    public function getProdutoDao() {
+
+        return new PostgresProdutoDao($this->getConnection());
+
+    }
+
+    public function getEstoqueDao() {
+
+        return new PostgresEstoqueDao($this->getConnection());
+
+    }
+
+    public function getPedidoDao() {
+
+        return new PostgresPedidoDao($this->getConnection());
+
+    }
+
+    public function getItemPedidoDao() {
+
+        return new PostgresItemPedidoDao($this->getConnection());
 
     }
 }
