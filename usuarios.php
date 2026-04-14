@@ -13,7 +13,20 @@ echo "<section>";
 // procura usuários
 
 $dao = $factory->getUsuarioDao();
-$usuarios = $dao->buscaTodos();
+$itensPorPagina = 10;
+$paginaAtual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+if ($paginaAtual < 1) {
+    $paginaAtual = 1;
+}
+
+$totalUsuarios = $dao->contaTodos();
+$totalPaginas = max(1, (int)ceil($totalUsuarios / $itensPorPagina));
+if ($paginaAtual > $totalPaginas) {
+    $paginaAtual = $totalPaginas;
+}
+
+$offset = ($paginaAtual - 1) * $itensPorPagina;
+$usuarios = $dao->buscaTodos($itensPorPagina, $offset);
 
 // display the products if there are any
 if($usuarios) {
@@ -49,6 +62,21 @@ if($usuarios) {
 		echo "</tr>";
 	}
 	echo "</table>";
+}
+
+echo "<p>Pagina {$paginaAtual} de {$totalPaginas}</p>";
+
+if ($totalPaginas > 1) {
+	echo "<nav>";
+	if ($paginaAtual > 1) {
+		$paginaAnterior = $paginaAtual - 1;
+		echo "<a href='usuarios.php?pagina={$paginaAnterior}' class='btn btn-default left-margin'>Anterior</a>";
+	}
+	if ($paginaAtual < $totalPaginas) {
+		$proximaPagina = $paginaAtual + 1;
+		echo "<a href='usuarios.php?pagina={$proximaPagina}' class='btn btn-default left-margin'>Proxima</a>";
+	}
+	echo "</nav>";
 }
  
 echo "<a href='novo_usuario.php' class='btn btn-primary left-margin'>";

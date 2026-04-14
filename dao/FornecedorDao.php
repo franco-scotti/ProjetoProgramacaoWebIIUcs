@@ -6,6 +6,7 @@ interface FornecedorDao {
     public function removePorId($id);
     public function altera(&$fornecedor);
     public function buscaPorId($id);
-    public function buscaTodos();
+    public function buscaTodos($limit = null, $offset = null);
+    public function contaTodos();
 }
 ?>

@@ -137,7 +137,7 @@ class PostgresUsuarioDao extends PostgresDao implements UsuarioDao {
     }
     */
 
-    public function buscaTodos() {
+    public function buscaTodos($limit = null, $offset = null) {
 
         $usuarios = array();
 
@@ -146,8 +146,18 @@ class PostgresUsuarioDao extends PostgresDao implements UsuarioDao {
                 FROM
                     " . $this->table_name . 
                     " ORDER BY id ASC";
-     
+
+        if ($limit !== null && $offset !== null) {
+            $query .= " LIMIT :limit OFFSET :offset";
+        }
+
         $stmt = $this->conn->prepare( $query );
+
+        if ($limit !== null && $offset !== null) {
+            $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        }
+
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
@@ -156,6 +166,14 @@ class PostgresUsuarioDao extends PostgresDao implements UsuarioDao {
         }
         
         return $usuarios;
+    }
+
+    public function contaTodos() {
+        $query = "SELECT COUNT(*) AS total FROM " . $this->table_name;
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+
+        return (int)$stmt->fetchColumn();
     }
 }
 ?>

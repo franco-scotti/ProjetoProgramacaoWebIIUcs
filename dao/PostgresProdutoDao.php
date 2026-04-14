@@ -76,9 +76,13 @@ class PostgresProdutoDao extends PostgresDao implements ProdutoDao {
         return $produto;
     }
 
-    public function buscaTodos() {
+    public function buscaTodos($limit = null, $offset = null) {
         $produtos = array();
         $query = "SELECT id, nome, descricao, foto, fornecedor_id FROM " . $this->table_name . " ORDER BY id ASC";
+
+        if ($limit !== null && $offset !== null) {
+            $query .= " LIMIT " . (int)$limit . " OFFSET " . (int)$offset;
+        }
 
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
@@ -92,6 +96,14 @@ class PostgresProdutoDao extends PostgresDao implements ProdutoDao {
         }
 
         return $produtos;
+    }
+
+    public function contaTodos() {
+        $query = "SELECT COUNT(*) AS total FROM " . $this->table_name;
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+
+        return (int)$stmt->fetchColumn();
     }
 }
 ?>

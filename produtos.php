@@ -7,7 +7,20 @@ include_once "fachada.php";
 echo "<section>";
 
 $dao = $factory->getProdutoDao();
-$produtos = $dao->buscaTodos();
+$itensPorPagina = 10;
+$paginaAtual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+if ($paginaAtual < 1) {
+    $paginaAtual = 1;
+}
+
+$totalProdutos = $dao->contaTodos();
+$totalPaginas = max(1, (int)ceil($totalProdutos / $itensPorPagina));
+if ($paginaAtual > $totalPaginas) {
+    $paginaAtual = $totalPaginas;
+}
+
+$offset = ($paginaAtual - 1) * $itensPorPagina;
+$produtos = $dao->buscaTodos($itensPorPagina, $offset);
 
 if($produtos) {
     echo "<table class='table table-hover table-responsive table-bordered'>";
@@ -29,6 +42,21 @@ if($produtos) {
     }
 
     echo "</table>";
+}
+
+echo "<p>Pagina {$paginaAtual} de {$totalPaginas}</p>";
+
+if ($totalPaginas > 1) {
+    echo "<nav>";
+    if ($paginaAtual > 1) {
+        $paginaAnterior = $paginaAtual - 1;
+        echo "<a href='produtos.php?pagina={$paginaAnterior}' class='btn btn-default left-margin'>Anterior</a>";
+    }
+    if ($paginaAtual < $totalPaginas) {
+        $proximaPagina = $paginaAtual + 1;
+        echo "<a href='produtos.php?pagina={$proximaPagina}' class='btn btn-default left-margin'>Proxima</a>";
+    }
+    echo "</nav>";
 }
 
 echo "<a href='novo_produto.php' class='btn btn-primary left-margin'>Novo</a>";

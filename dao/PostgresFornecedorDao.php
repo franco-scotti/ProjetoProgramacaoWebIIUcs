@@ -91,7 +91,7 @@ class PostgresFornecedorDao extends PostgresDao implements FornecedorDao {
         return $fornecedor;
     }
 
-    public function buscaTodos() {
+    public function buscaTodos($limit = null, $offset = null) {
 
         $fornecedores = array();
 
@@ -101,7 +101,17 @@ class PostgresFornecedorDao extends PostgresDao implements FornecedorDao {
                     " . $this->table_name .
                     " ORDER BY id ASC";
 
+        if ($limit !== null && $offset !== null) {
+            $query .= " LIMIT :limit OFFSET :offset";
+        }
+
         $stmt = $this->conn->prepare($query);
+
+        if ($limit !== null && $offset !== null) {
+            $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        }
+
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
@@ -109,6 +119,14 @@ class PostgresFornecedorDao extends PostgresDao implements FornecedorDao {
         }
 
         return $fornecedores;
+    }
+
+    public function contaTodos() {
+        $query = "SELECT COUNT(*) AS total FROM " . $this->table_name;
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+
+        return (int)$stmt->fetchColumn();
     }
 }
 ?>
