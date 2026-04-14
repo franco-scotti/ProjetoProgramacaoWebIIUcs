@@ -7,7 +7,6 @@
     overflow: hidden;
 }
  
-/* some changes in bootstrap modal */
 .modal-body {
     padding: 20px 20px 0px 20px !important;
     text-align: center !important;
@@ -15,4 +14,16 @@
  
 .modal-footer{
     text-align: center !important;
+}
+
+.table-responsive {
+    border: 0;
+}
+
+.page-shell p {
+    margin-bottom: 14px;
+}
+
+.page-shell nav {
+    margin: 14px 0;
 }
