@@ -126,4 +126,4 @@ include_once dirname(__DIR__) . "/views/layout/layout_header.php";
         <a href="<?= BASE_URL ?>/views/listagem/lista_clientes.php">Relacionamento</a>
     </div>
 </section>
-<?php include_once dirname(__DIR__, 2) . "/views/layout/layout_footer.php"; ?>
+<?php include_once dirname(__DIR__, 1) . "/views/layout/layout_footer.php"; ?>

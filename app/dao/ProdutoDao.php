@@ -7,6 +7,7 @@ interface ProdutoDao {
     public function altera(&$produto);
     public function buscaPorId($id);
     public function buscaTodos($limit = null, $offset = null);
+    public function buscaPorCodigoNome($termo);
     public function contaTodos();
 }
 ?>
