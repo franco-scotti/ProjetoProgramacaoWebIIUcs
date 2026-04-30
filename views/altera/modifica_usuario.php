@@ -5,7 +5,7 @@ if (!defined('BASE_URL')) {
     define('BASE_URL', '/ProjetoProgramacaoWebIIUcs');
 }
 include_once dirname(__DIR__, 2) . "/routes/fachada.php";
-include dirname(__DIR__, 2) . "app/controllers/login/verifica.php";
+include dirname(__DIR__, 2) . "/app/controllers/login/verifica.php";
 
 $id = @$_GET["id"];
 

@@ -1,43 +1,145 @@
 <?php
-$page_title = "Demo : Listagem de Estoque";
+$page_title = "Demo : Listagem de Estoques";
 
 if (!defined('BASE_URL')) {
     define('BASE_URL', '/ProjetoProgramacaoWebIIUcs');
 }
 
-include_once dirname(__DIR__) . "/layout/layout_header.php";
 include_once dirname(__DIR__, 2) . "/routes/fachada.php";
+
+$dao = $factory->getEstoqueDao();
+
+function escreveLinhasEstoques($estoques) {
+    if($estoques) {
+        foreach ($estoques as $estoque) {
+            echo "<tr>";
+                echo "<td>{$estoque->getId()}</td>";
+                echo "<td>{$estoque->getProduto()->getId()}</td>";
+                echo "<td>{$estoque->getQuantidade()}</td>";
+                echo "<td>{$estoque->getPreco()}</td>";
+                echo "<td>";
+                    echo "<a href='" . BASE_URL . "/views/detalhes/mostra_estoque.php?id={$estoque->getId()}' class='btn btn-primary left-margin'>";
+                        echo "<span class='glyphicon glyphicon-list'></span> Mostra";
+                    echo "</a>";
+
+                    echo "<a href='" . BASE_URL . "/views/altera/modifica_estoque.php?id={$estoque->getId()}' class='btn btn-info left-margin'>";
+                        echo "<span class='glyphicon glyphicon-edit'></span> Altera";
+                    echo "</a>";
+
+                    echo "<a href='" . BASE_URL . "/app/controllers/remove/remove_estoque.php?id={$estoque->getId()}' class='btn btn-danger left-margin' ";
+                    echo "onclick=\"return confirm('Tem certeza que quer excluir?')\">";
+                        echo "<span class='glyphicon glyphicon-remove'></span> Exclui";
+                    echo "</a>";
+                echo "</td>";
+            echo "</tr>";
+        }
+    } else {
+        echo "<tr><td colspan='5'>Nenhum estoque encontrado</td></tr>";
+    }
+}
+
+// AJAX precisa ficar antes do layout_header
+if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
+    $termo = isset($_GET['pesquisa']) ? $_GET['pesquisa'] : '';
+
+    if ($termo != '') {
+        $estoques = $dao->buscaPorCodigoNome($termo);
+    } else {
+        $estoques = $dao->buscaTodos(10, 0);
+    }
+
+    escreveLinhasEstoques($estoques);
+    exit;
+}
+
+include_once dirname(__DIR__) . "/layout/layout_header.php";
 
 echo "<section>";
 
-$dao = $factory->getEstoqueDao();
-$estoques = $dao->buscaTodos();
+$itensPorPagina = 10;
+$paginaAtual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
 
-if($estoques) {
-    echo "<table class='table table-hover table-responsive table-bordered'>";
-    echo "<tr><th>Id</th><th>ProdutoId</th><th>Quantidade</th><th>Preco</th><th>Acoes</th></tr>";
+if ($paginaAtual < 1) {
+    $paginaAtual = 1;
+}
 
-    foreach ($estoques as $estoque) {
-        $produtoId = $estoque->getProduto() ? $estoque->getProduto()->getId() : '';
-        echo "<tr>";
-        echo "<td>{$estoque->getId()}</td>";
-        echo "<td>{$produtoId}</td>";
-        echo "<td>{$estoque->getQuantidade()}</td>";
-        echo "<td>{$estoque->getPreco()}</td>";
-        echo "<td>";
-        echo "<a href='" . BASE_URL . "/views/detalhes/mostra_estoque.php?id={$estoque->getId()}' class='btn btn-primary left-margin'><span class='glyphicon glyphicon-list'></span> Mostra</a>";
-        echo "<a href='" . BASE_URL . "/views/altera/modifica_estoque.php?id={$estoque->getId()}' class='btn btn-info left-margin'><span class='glyphicon glyphicon-edit'></span> Altera</a>";
-        echo "<a href='" . BASE_URL . "/app/controllers/remove/remove_estoque.php?id={$estoque->getId()}' class='btn btn-danger left-margin' onclick=\"return confirm('Tem certeza que quer excluir?')\"><span class='glyphicon glyphicon-remove'></span> Exclui</a>";
-        echo "</td>";
-        echo "</tr>";
+$totalEstoques = $dao->contaTodos();
+$totalPaginas = max(1, (int)ceil($totalEstoques / $itensPorPagina));
+
+if ($paginaAtual > $totalPaginas) {
+    $paginaAtual = $totalPaginas;
+}
+
+$offset = ($paginaAtual - 1) * $itensPorPagina;
+$estoques = $dao->buscaTodos($itensPorPagina, $offset);
+
+echo "<input type='text' id='pesquisaEstoque' class='form-control' placeholder='Buscar por código do estoque, código do produto ou nome do produto'>";
+echo "<br>";
+
+echo "<table class='table table-hover table-responsive table-bordered'>";
+    echo "<tr>";
+        echo "<th>Id</th>";
+        echo "<th>Produto</th>";
+        echo "<th>Quantidade</th>";
+        echo "<th>Preço</th>";
+        echo "<th>Ações</th>";
+    echo "</tr>";
+
+    echo "<tbody id='resultadoEstoques'>";
+        escreveLinhasEstoques($estoques);
+    echo "</tbody>";
+echo "</table>";
+
+echo "<div id='paginacaoEstoques'>";
+
+echo "<p>Pagina {$paginaAtual} de {$totalPaginas}</p>";
+
+if ($totalPaginas > 1) {
+    echo "<nav>";
+
+    if ($paginaAtual > 1) {
+        $paginaAnterior = $paginaAtual - 1;
+        echo "<a href='lista_estoques.php?pagina={$paginaAnterior}' class='btn btn-default left-margin'>Anterior</a>";
     }
 
-    echo "</table>";
+    if ($paginaAtual < $totalPaginas) {
+        $proximaPagina = $paginaAtual + 1;
+        echo "<a href='" . BASE_URL . "/views/listagem/lista_estoques.php?pagina={$proximaPagina}' class='btn btn-default left-margin'>Proxima</a>";
+    }
+
+    echo "</nav>";
 }
+
+echo "</div>";
 
 echo "<a href='" . BASE_URL . "/views/cadastro/novo_estoque.php' class='btn btn-primary left-margin'>Novo</a>";
 
 echo "</section>";
+?>
 
+<script>
+document.getElementById('pesquisaEstoque').addEventListener('keyup', function() {
+
+    var termo = this.value;
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            document.getElementById('resultadoEstoques').innerHTML = this.responseText;
+
+            if (termo.trim() != '') {
+                document.getElementById('paginacaoEstoques').style.display = 'none';
+            } else {
+                document.getElementById('paginacaoEstoques').style.display = 'block';
+            }
+        }
+    };
+
+    xhttp.open("GET", "lista_estoques.php?ajax=1&pesquisa=" + encodeURIComponent(termo), true);
+    xhttp.send();
+});
+</script>
+
+<?php
 include_once dirname(__DIR__) . "/layout/layout_footer.php";
 ?>

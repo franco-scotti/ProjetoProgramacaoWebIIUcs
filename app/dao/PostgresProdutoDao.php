@@ -98,6 +98,26 @@ class PostgresProdutoDao extends PostgresDao implements ProdutoDao {
         return $produtos;
     }
 
+    public function buscaPorCodigoNome($termo) {
+        $produtos = array();
+        $query = "SELECT id, nome, descricao, foto, fornecedor_id FROM " . $this->table_name .
+                 " WHERE CAST(id AS TEXT) ILIKE :termo OR nome ILIKE :termo ORDER BY id ASC";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':termo', '%' . $termo . '%');
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            $produto = new Produto($row['id'], $row['nome'], $row['descricao'], $row['foto']);
+            if ($row['fornecedor_id']) {
+                $produto->setFornecedor(new Fornecedor($row['fornecedor_id'], '', '', '', ''));
+            }
+            $produtos[] = $produto;
+        }
+
+        return $produtos;
+    }
+
     public function contaTodos() {
         $query = "SELECT COUNT(*) AS total FROM " . $this->table_name;
         $stmt = $this->conn->prepare($query);

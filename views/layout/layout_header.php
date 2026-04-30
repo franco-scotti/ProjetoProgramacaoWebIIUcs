@@ -16,8 +16,8 @@ if (is_session_started() === FALSE) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $page_title; ?></title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="/ProjetoProgramacaoWebIIUcs/public/assets/css/custom2.css">
-    <link rel="stylesheet" href="/ProjetoProgramacaoWebIIUcs/public/assets/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="<?php echo BASE_URL; ?>/public/assets/css/custom2.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/public/assets/css/custom.css" />
 </head>
 <?php
 $paginaAtual = basename($_SERVER['PHP_SELF']);
@@ -35,13 +35,13 @@ $menuGestao = array(
     '/ProjetoProgramacaoWebIIUcs/views/listagem/lista_itens_pedido.php' => 'Itens Pedido'
 );
 ?>
-<body class="<?php echo $paginaAtual === '/ProjetoProgramacaoWebIIUcs/public/index.php' ? 'home-page' : 'inner-page'; ?>">
+<body class="<?php echo $paginaAtual === '" . BASE_URL . "/public/index.php' ? 'home-page' : 'inner-page'; ?>">
     <div class="site-bg"></div>
     <header class="store-header">
         <div class="brand-row">
             <a href="<?php echo BASE_URL; ?>/public/index.php" class="brand-block">
                 <div class="brand-mark">
-                    <img src="/ProjetoProgramacaoWebIIUcs/public/assets/images/LogoUCS.png" alt="Logo da loja" width="80" height="80" />
+                    <img src="<?php echo BASE_URL; ?>/public/assets/images/LogoUCS.png" alt="Logo da loja" width="80" height="80" />
                 </div>
                 <div class="brand-copy">
                     <span class="brand-kicker">Loja Digital</span>
@@ -58,7 +58,7 @@ $menuGestao = array(
                     <?php
                     if (isset($_SESSION["nome_usuario"])) {
                         echo "<span>Conta ativa: " . htmlspecialchars($_SESSION["nome_usuario"]) . "</span>";
-                        echo "<a href='" . BASE_URL . "/app/controllers/executa_logout.php' class='session-link'>Sair</a>";
+                        echo "<a href='" . BASE_URL . "/app/controllers/login/executa_logout.php' class='session-link'>Sair</a>";
                     } else {
                         echo "<span>Ambiente administrativo</span>";
                         echo "<a href='" . BASE_URL . "/public/login.php' class='session-link'>Entrar</a>";
@@ -85,8 +85,8 @@ $menuGestao = array(
                 }
 
                 if (isset($_SESSION["nome_usuario"])) {
-                    $classeAtiva = $paginaAtual === 'lista_usuarios.php' ? 'nav-link nav-link-secondary is-active' : 'nav-link nav-link-secondary';
-                    echo "<a href='lista_usuarios.php' class='{$classeAtiva}'>Usuarios</a>";
+                    $classeAtiva = $paginaAtual === '" . BASE_URL . "/views/listagem/lista_usuarios.php' ? 'nav-link nav-link-secondary is-active' : 'nav-link nav-link-secondary';
+                    echo "<a href='" . BASE_URL . "/views/listagem/lista_usuarios.php' class='{$classeAtiva}'>Usuarios</a>";
                 }
                 ?>
             </div>

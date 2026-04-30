@@ -5,7 +5,7 @@ $page_title = "Demo : Autenticação Obrigatória";
 include_once "../views/layout/layout_header.php";
 ?>
 <section>
-<form action="executa_login.php" method="POST" role="form">
+<form action="../app/controllers/login/executa_login.php" method="POST" role="form">
     <legend>Informe seu login e sua senha para entrar</legend>
 
     <div class="form-group">

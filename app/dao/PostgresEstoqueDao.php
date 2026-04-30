@@ -74,22 +74,77 @@ class PostgresEstoqueDao extends PostgresDao implements EstoqueDao {
         return $estoque;
     }
 
-    public function buscaTodos() {
+    public function buscaTodos($limit = null, $offset = null) {
         $estoques = array();
-        $query = "SELECT id, produto_id, quantidade, preco FROM " . $this->table_name . " ORDER BY id ASC";
+
+        $query = "SELECT id, produto_id, quantidade, preco
+                FROM " . $this->table_name . "
+                ORDER BY id ASC";
+
+        if ($limit !== null && $offset !== null) {
+            $query .= " LIMIT :limit OFFSET :offset";
+        }
 
         $stmt = $this->conn->prepare($query);
+
+        if ($limit !== null && $offset !== null) {
+            $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        }
+
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             $estoque = new Estoque($row['id'], $row['quantidade'], $row['preco']);
+
             if ($row['produto_id']) {
                 $estoque->setProduto(new Produto($row['produto_id'], '', '', null));
             }
+
             $estoques[] = $estoque;
         }
 
         return $estoques;
+    }
+
+    public function buscaPorCodigoNome($termo) {
+        $estoques = array();
+
+        $query = "SELECT e.id, e.produto_id, e.quantidade, e.preco
+                FROM estoque e
+                LEFT JOIN produto p ON p.id = e.produto_id
+                WHERE CAST(e.id AS TEXT) ILIKE :termo
+                    OR CAST(e.produto_id AS TEXT) ILIKE :termo
+                    OR p.nome ILIKE :termo
+                ORDER BY e.id ASC";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':termo', '%' . $termo . '%');
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            $estoque = new Estoque($row['id'], $row['quantidade'], $row['preco']);
+
+            if ($row['produto_id']) {
+                $estoque->setProduto(new Produto($row['produto_id'], '', '', null));
+            }
+
+            $estoques[] = $estoque;
+        }
+
+        return $estoques;
+    }
+
+    public function contaTodos() {
+
+        $query = "SELECT COUNT(*) as total FROM " . $this->table_name;
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $row['total'];
     }
 }
 ?>

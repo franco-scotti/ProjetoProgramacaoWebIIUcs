@@ -9,5 +9,6 @@ interface UsuarioDao {
     public function buscaPorLogin($login);
     public function buscaTodos($limit = null, $offset = null);
     public function contaTodos();
+    public function buscaPorCodigoNome($termo);
 }
 ?>

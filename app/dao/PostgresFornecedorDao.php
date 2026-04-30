@@ -121,6 +121,32 @@ class PostgresFornecedorDao extends PostgresDao implements FornecedorDao {
         return $fornecedores;
     }
 
+    public function buscaPorCodigoNome($termo) {
+        $fornecedores = array();
+
+        $query = "SELECT id, nome, descricao, telefone, email
+                FROM " . $this->table_name . "
+                WHERE CAST(id AS TEXT) ILIKE :termo
+                    OR nome ILIKE :termo
+                ORDER BY id ASC";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':termo', '%' . $termo . '%');
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+            $fornecedores[] = new Fornecedor(
+                $row['id'],
+                $row['nome'],
+                $row['descricao'],
+                $row['telefone'],
+                $row['email']
+            );
+        }
+
+        return $fornecedores;
+    }
+
     public function contaTodos() {
         $query = "SELECT COUNT(*) AS total FROM " . $this->table_name;
         $stmt = $this->conn->prepare($query);
