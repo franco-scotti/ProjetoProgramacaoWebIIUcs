@@ -25,7 +25,7 @@ if($pedido) {
     echo "<p>Data Pedido : " . $pedido->getDataPedido() . "</p>";
     echo "<p>Data Entrega : " . $pedido->getDataEntrega() . "</p>";
     echo "<p>Situacao : " . $pedido->getSituacao() . "</p>";
-    echo "<p>Cliente ID : " . $clienteId . "</p>";
+    echo "<p>Cliente : " . ($pedido->getCliente() ? $pedido->getCliente()->getNome() : 'Não especificado') . "</p>";
     echo "<a href='" . BASE_URL . "/views/listagem/lista_pedidos.php' class='btn btn-primary left-margin'>Voltar</a>";
     echo "</section>";
 }

@@ -10,6 +10,7 @@ $id = @$_GET["id"];
 $dao = $factory->getPedidoDao();
 $pedido = $dao->buscaPorId($id);
 $clienteId = $pedido->getCliente() ? $pedido->getCliente()->getId() : '';
+$clientes = $factory->getClienteDao()->buscaTodos();
 
 include_once dirname(__DIR__) . "/layout/layout_header.php";
 ?>
@@ -20,7 +21,24 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
         <tr><td>Data Pedido</td><td><input type='date' name='data_pedido' value='<?php echo $pedido->getDataPedido();?>' class='form-control' /></td></tr>
         <tr><td>Data Entrega</td><td><input type='date' name='data_entrega' value='<?php echo $pedido->getDataEntrega();?>' class='form-control' /></td></tr>
         <tr><td>Situacao</td><td><input type='text' name='situacao' value='<?php echo $pedido->getSituacao();?>' class='form-control' /></td></tr>
-        <tr><td>Cliente ID</td><td><input type='text' name='cliente_id' value='<?php echo $clienteId;?>' class='form-control' /></td></tr>
+        <tr><td>Cliente</td>
+                <td>
+                    <select name="cliente_id" class="form-control">
+                        <option value="">Selecione um cliente</option>
+
+                        <?php foreach ($clientes as $cliente) { ?>
+
+                            <option value="<?= $cliente->getId() ?>"
+                                <?= ($cliente->getId() == $clienteId) ? 'selected' : '' ?>>
+
+                                <?= $cliente->getNome() ?>
+
+                            </option>
+
+                        <?php } ?>
+
+                    </select>
+                </td></tr>
         <tr><td></td><td><button type="submit" class="btn btn-primary">Alterar</button> <a href='<?= BASE_URL ?>/views/listagem/lista_pedidos.php' class='btn btn-primary left-margin'>Cancela</a></td></tr>
     </table>
     <input type='hidden' name='id' value='<?php echo $pedido->getId();?>'/>

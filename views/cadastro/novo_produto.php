@@ -5,7 +5,12 @@ if (!defined('BASE_URL')) {
 }
 
 include_once dirname(__DIR__) . "/layout/layout_header.php";
+include_once dirname(__DIR__, 2) . "/routes/fachada.php";
+
+$fornecedorDao = $factory->getFornecedorDao();
+$fornecedores = $fornecedorDao->buscaTodos();
 ?>
+
 <section>
     <form action="<?= BASE_URL ?>/app/controllers/insere/insere_produto.php" method="get">
         <table class="table table-hover table-responsive table-bordered">
@@ -22,8 +27,19 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
                 <td><input type="text" name="foto" class="form-control" /></td>
             </tr>
             <tr>
-                <td>Fornecedor ID</td>
-                <td><input type="text" name="fornecedor_id" class="form-control" /></td>
+                <td>Fornecedor</td>
+                <td>
+                    <select name="fornecedor_id" class="form-control">
+                        <option value="">Selecione um fornecedor</option>
+
+                        <?php foreach ($fornecedores as $fornecedor) { ?>
+                            <option value="<?= $fornecedor->getId() ?>">
+                                <?= $fornecedor->getNome() ?>
+                            </option>
+                        <?php } ?>
+
+                    </select>
+                </td>
             </tr>
             <tr>
                 <td></td>

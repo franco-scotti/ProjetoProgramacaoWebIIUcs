@@ -11,6 +11,10 @@ $dao = $factory->getEnderecoDao();
 $endereco = $dao->buscaPorId($id);
 $fornecedorId = $endereco->getFornecedor() ? $endereco->getFornecedor()->getId() : '';
 $clienteId = $endereco->getCliente() ? $endereco->getCliente()->getId() : '';
+$fornecedorDao = $factory->getFornecedorDao();
+$clienteDao = $factory->getClienteDao();
+$fornecedores = $fornecedorDao->buscaTodos();
+$clientes = $clienteDao->buscaTodos();
 
 include_once dirname(__DIR__) . "/layout/layout_header.php";
 ?>
@@ -36,8 +40,26 @@ if ($erro === "vinculo_invalido") {
         <tr><td>CEP</td><td><input type='text' name='cep' value='<?php echo $endereco->getCep();?>' class='form-control' /></td></tr>
         <tr><td>Cidade</td><td><input type='text' name='cidade' value='<?php echo $endereco->getCidade();?>' class='form-control' /></td></tr>
         <tr><td>Estado</td><td><input type='text' name='estado' value='<?php echo $endereco->getEstado();?>' class='form-control' /></td></tr>
-        <tr><td>Fornecedor ID</td><td><input type='text' name='fornecedor_id' value='<?php echo $fornecedorId;?>' class='form-control' /></td></tr>
-        <tr><td>Cliente ID</td><td><input type='text' name='cliente_id' value='<?php echo $clienteId;?>' class='form-control' /></td></tr>
+        <tr><td>Fornecedor</td><td>
+            <select name="fornecedor_id" class="form-control">
+                <option value="">Selecione um fornecedor</option>
+                <?php foreach ($fornecedores as $fornecedor) { ?>
+                    <option value="<?= $fornecedor->getId() ?>" <?= $fornecedor->getId() == $fornecedorId ? 'selected' : '' ?>>
+                        <?= $fornecedor->getNome() ?>
+                    </option>
+                <?php } ?>
+            </select>
+        </td></tr>
+        <tr><td>Cliente</td><td>
+            <select name="cliente_id" class="form-control">
+                <option value="">Selecione um cliente</option>
+                <?php foreach ($clientes as $cliente) { ?>
+                    <option value="<?= $cliente->getId() ?>" <?= $cliente->getId() == $clienteId ? 'selected' : '' ?>>
+                        <?= $cliente->getNome() ?>
+                    </option>
+                <?php } ?>
+            </select>
+        </td></tr>
         <tr><td></td><td><button type="submit" class="btn btn-primary">Alterar</button> <a href='<?= BASE_URL ?>/views/listagem/lista_enderecos.php' class='btn btn-primary left-margin'>Cancela</a></td></tr>
     </table>
     <input type='hidden' name='id' value='<?php echo $endereco->getId();?>'/>

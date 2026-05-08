@@ -6,6 +6,7 @@ interface ItemPedidoDao {
     public function removePorId($id);
     public function altera(&$itemPedido);
     public function buscaPorId($id);
-    public function buscaTodos();
+    public function buscaTodos($offset = null, $limit = null);
+    public function contaTodos();
 }
 ?>

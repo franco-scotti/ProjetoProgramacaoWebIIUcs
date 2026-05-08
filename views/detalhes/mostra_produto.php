@@ -18,12 +18,12 @@ if($produto) {
 include_once dirname(__DIR__) . "/layout/layout_header.php";
 
 if($produto) {
-    $fornecedorId = $produto->getFornecedor() ? $produto->getFornecedor()->getId() : '';
+    $fornecedorNome = $produto->getFornecedor() ? $produto->getFornecedor()->getNome() : '';
     echo "<section>";
     echo "<h1> Nome : " . $produto->getNome() . "</h1>";
     echo "<p>Id : " . $produto->getId() . "</p>";
     echo "<p>Descricao : " . $produto->getDescricao() . "</p>";
-    echo "<p>Fornecedor ID : " . $fornecedorId . "</p>";
+    echo "<p>Fornecedor: " . $fornecedorNome . "</p>";
     echo "<a href='" . BASE_URL . "/views/listagem/lista_produtos.php' class='btn btn-primary left-margin'>Voltar</a>";
     echo "</section>";
 }

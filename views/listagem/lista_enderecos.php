@@ -15,11 +15,11 @@ $enderecos = $dao->buscaTodos();
 
 if($enderecos) {
     echo "<table class='table table-hover table-responsive table-bordered'>";
-    echo "<tr><th>Id</th><th>Rua</th><th>Numero</th><th>Bairro</th><th>Cidade</th><th>Estado</th><th>FornecedorId</th><th>ClienteId</th><th>Acoes</th></tr>";
+    echo "<tr><th>Id</th><th>Rua</th><th>Numero</th><th>Bairro</th><th>Cidade</th><th>Estado</th><th>Fornecedor</th><th>Cliente</th><th>Acoes</th></tr>";
 
     foreach ($enderecos as $endereco) {
-        $fornecedorId = $endereco->getFornecedor() ? $endereco->getFornecedor()->getId() : '';
-        $clienteId = $endereco->getCliente() ? $endereco->getCliente()->getId() : '';
+        $fornecedorId = $endereco->getFornecedor() ? $endereco->getFornecedor()->getNome() : '';
+        $clienteId = $endereco->getCliente() ? $endereco->getCliente()->getNome() : '';
 
         echo "<tr>";
         echo "<td>{$endereco->getId()}</td>";

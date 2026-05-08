@@ -39,7 +39,6 @@ function escreveLinhasFornecedores($fornecedores) {
     }
 }
 
-// AJAX precisa ficar antes do layout_header
 if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
     $termo = isset($_GET['pesquisa']) ? $_GET['pesquisa'] : '';
 

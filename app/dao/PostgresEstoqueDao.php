@@ -57,29 +57,56 @@ class PostgresEstoqueDao extends PostgresDao implements EstoqueDao {
 
     public function buscaPorId($id) {
         $estoque = null;
-        $query = "SELECT id, produto_id, quantidade, preco FROM " . $this->table_name . " WHERE id = ? LIMIT 1 OFFSET 0";
-
+        $query = "SELECT 
+            e.id,
+            e.produto_id,
+            e.quantidade,
+            e.preco,
+            p.nome AS produto_nome,
+            p.descricao AS produto_descricao
+          FROM estoque e
+          LEFT JOIN produto p ON p.id = e.produto_id
+          WHERE e.id = :id";
+        
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $id);
         $stmt->execute();
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if($row) {
-            $estoque = new Estoque($row['id'], $row['quantidade'], $row['preco']);
-            if ($row['produto_id']) {
-                $estoque->setProduto(new Produto($row['produto_id'], '', '', null));
-            }
-        }
+            $estoque = new Estoque(
+            $row['id'],
+            $row['quantidade'],
+            $row['preco']);
 
-        return $estoque;
+            if ($row['produto_id']) {
+                $produto = new Produto(
+                    $row['produto_id'],
+                    $row['produto_nome'],
+                    $row['produto_descricao'],
+                    null
+                );
+
+                $estoque->setProduto($produto);
+            }
+
+            return $estoque;
+        }
     }
 
     public function buscaTodos($limit = null, $offset = null) {
         $estoques = array();
 
-        $query = "SELECT id, produto_id, quantidade, preco
-                FROM " . $this->table_name . "
-                ORDER BY id ASC";
+        $query = "SELECT 
+            e.id,
+            e.produto_id,
+            e.quantidade,
+            e.preco,
+            p.nome AS produto_nome,
+            p.descricao AS produto_descricao
+          FROM estoque e
+          LEFT JOIN produto p ON p.id = e.produto_id
+          ORDER BY e.id ASC";
 
         if ($limit !== null && $offset !== null) {
             $query .= " LIMIT :limit OFFSET :offset";
@@ -95,13 +122,25 @@ class PostgresEstoqueDao extends PostgresDao implements EstoqueDao {
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-            $estoque = new Estoque($row['id'], $row['quantidade'], $row['preco']);
+            $estoque = new Estoque(
+            $row['id'],
+            $row['quantidade'],
+            $row['preco']
+        );
 
-            if ($row['produto_id']) {
-                $estoque->setProduto(new Produto($row['produto_id'], '', '', null));
-            }
+        if ($row['produto_id']) {
 
-            $estoques[] = $estoque;
+            $produto = new Produto(
+                $row['produto_id'],
+                $row['produto_nome'],
+                $row['produto_descricao'],
+                null
+            );
+
+            $estoque->setProduto($produto);
+        }
+
+        $estoques[] = $estoque;
         }
 
         return $estoques;
@@ -110,7 +149,7 @@ class PostgresEstoqueDao extends PostgresDao implements EstoqueDao {
     public function buscaPorCodigoNome($termo) {
         $estoques = array();
 
-        $query = "SELECT e.id, e.produto_id, e.quantidade, e.preco
+        $query = "SELECT e.id, e.produto_id, e.quantidade, e.preco, p.nome AS produto_nome, p.descricao AS produto_descricao
                 FROM estoque e
                 LEFT JOIN produto p ON p.id = e.produto_id
                 WHERE CAST(e.id AS TEXT) ILIKE :termo

@@ -71,11 +71,9 @@ $offset = ($paginaAtual - 1) * $itensPorPagina;
 $usuarios = $dao->buscaTodos($itensPorPagina, $offset);
 
 echo "<section>";
-// campo de pesquisa
 echo "<input type='text' id='pesquisaUsuario' class='form-control' placeholder='Buscar por código, login ou nome'>";
 echo "<br>";
 
-// tabela
 echo "<table class='table table-hover table-responsive table-bordered'>";
     echo "<tr>";
         echo "<th>Id</th>";
@@ -143,6 +141,5 @@ document.getElementById('pesquisaUsuario').addEventListener('keyup', function() 
 </script>
 
 <?php
-// layout do rodapé
 include_once dirname(__DIR__) . "/layout/layout_footer.php";
 ?>

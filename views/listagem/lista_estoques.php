@@ -14,7 +14,7 @@ function escreveLinhasEstoques($estoques) {
         foreach ($estoques as $estoque) {
             echo "<tr>";
                 echo "<td>{$estoque->getId()}</td>";
-                echo "<td>{$estoque->getProduto()->getId()}</td>";
+                echo "<td>{$estoque->getProduto()->getNome()}</td>";
                 echo "<td>{$estoque->getQuantidade()}</td>";
                 echo "<td>{$estoque->getPreco()}</td>";
                 echo "<td>";
@@ -38,7 +38,6 @@ function escreveLinhasEstoques($estoques) {
     }
 }
 
-// AJAX precisa ficar antes do layout_header
 if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
     $termo = isset($_GET['pesquisa']) ? $_GET['pesquisa'] : '';
 

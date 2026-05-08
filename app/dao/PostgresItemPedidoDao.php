@@ -71,45 +71,149 @@ class PostgresItemPedidoDao extends PostgresDao implements ItemPedidoDao {
 
     public function buscaPorId($id) {
         $itemPedido = null;
-        $query = "SELECT id, pedido_id, produto_id, quantidade, preco FROM " . $this->table_name . " WHERE id = ? LIMIT 1 OFFSET 0";
+
+        $query = "SELECT 
+                    ip.id,
+                    ip.pedido_id,
+                    ip.produto_id,
+                    ip.quantidade,
+                    ip.preco,
+
+                    p.numero AS pedido_numero,
+                    p.data_pedido AS pedido_data_pedido,
+                    p.data_entrega AS pedido_data_entrega,
+                    p.situacao AS pedido_situacao,
+
+                    pr.nome AS produto_nome,
+                    pr.descricao AS produto_descricao,
+                    pr.foto AS produto_foto
+                  FROM item_pedido ip
+                  LEFT JOIN pedido p ON p.id = ip.pedido_id
+                  LEFT JOIN produto pr ON pr.id = ip.produto_id
+                  WHERE ip.id = ?
+                  LIMIT 1 OFFSET 0";
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $id);
         $stmt->execute();
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
         if($row) {
-            $itemPedido = new ItemPedido($row['id'], $row['quantidade'], $row['preco']);
+            $itemPedido = new ItemPedido(
+                $row['id'],
+                $row['quantidade'],
+                $row['preco']
+            );
+
             if ($row['pedido_id']) {
-                $itemPedido->setPedido(new Pedido($row['pedido_id'], null, null, null, null));
+                $pedido = new Pedido(
+                    $row['pedido_id'],
+                    $row['pedido_numero'],
+                    $row['pedido_data_pedido'],
+                    $row['pedido_data_entrega'],
+                    $row['pedido_situacao']
+                );
+
+                $itemPedido->setPedido($pedido);
             }
+
             if ($row['produto_id']) {
-                $itemPedido->setProduto(new Produto($row['produto_id'], '', '', null));
+                $produto = new Produto(
+                    $row['produto_id'],
+                    $row['produto_nome'],
+                    $row['produto_descricao'],
+                    $row['produto_foto']
+                );
+
+                $itemPedido->setProduto($produto);
             }
         }
 
         return $itemPedido;
     }
 
-    public function buscaTodos() {
+    public function buscaTodos($limit = null, $offset = null) {
         $itensPedido = array();
-        $query = "SELECT id, pedido_id, produto_id, quantidade, preco FROM " . $this->table_name . " ORDER BY id ASC";
+
+        $query = "SELECT 
+                    ip.id,
+                    ip.pedido_id,
+                    ip.produto_id,
+                    ip.quantidade,
+                    ip.preco,
+
+                    p.numero AS pedido_numero,
+                    p.data_pedido AS pedido_data_pedido,
+                    p.data_entrega AS pedido_data_entrega,
+                    p.situacao AS pedido_situacao,
+
+                    pr.nome AS produto_nome,
+                    pr.descricao AS produto_descricao,
+                    pr.foto AS produto_foto
+                  FROM item_pedido ip
+                  LEFT JOIN pedido p ON p.id = ip.pedido_id
+                  LEFT JOIN produto pr ON pr.id = ip.produto_id
+                  ORDER BY ip.id ASC";
+
+        if ($limit !== null && $offset !== null) {
+            $query .= " LIMIT :limit OFFSET :offset";
+        }
 
         $stmt = $this->conn->prepare($query);
+
+        if ($limit !== null && $offset !== null) {
+            $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        }
+
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-            $itemPedido = new ItemPedido($row['id'], $row['quantidade'], $row['preco']);
+            $itemPedido = new ItemPedido(
+                $row['id'],
+                $row['quantidade'],
+                $row['preco']
+            );
+
             if ($row['pedido_id']) {
-                $itemPedido->setPedido(new Pedido($row['pedido_id'], null, null, null, null));
+                $pedido = new Pedido(
+                    $row['pedido_id'],
+                    $row['pedido_numero'],
+                    $row['pedido_data_pedido'],
+                    $row['pedido_data_entrega'],
+                    $row['pedido_situacao']
+                );
+
+                $itemPedido->setPedido($pedido);
             }
+
             if ($row['produto_id']) {
-                $itemPedido->setProduto(new Produto($row['produto_id'], '', '', null));
+                $produto = new Produto(
+                    $row['produto_id'],
+                    $row['produto_nome'],
+                    $row['produto_descricao'],
+                    $row['produto_foto']
+                );
+
+                $itemPedido->setProduto($produto);
             }
+
             $itensPedido[] = $itemPedido;
         }
 
         return $itensPedido;
+    }
+
+    public function contaTodos() {
+        $query = "SELECT COUNT(*) as total FROM " . $this->table_name;
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $row['total'];
     }
 }
 ?>

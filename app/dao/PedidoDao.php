@@ -6,6 +6,8 @@ interface PedidoDao {
     public function removePorId($id);
     public function altera(&$pedido);
     public function buscaPorId($id);
-    public function buscaTodos();
+    public function buscaTodos($offset = null, $limit = null);
+    public function contaTodos();
+    
 }
 ?>

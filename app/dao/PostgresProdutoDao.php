@@ -59,7 +59,19 @@ class PostgresProdutoDao extends PostgresDao implements ProdutoDao {
 
     public function buscaPorId($id) {
         $produto = null;
-        $query = "SELECT id, nome, descricao, foto, fornecedor_id FROM " . $this->table_name . " WHERE id = ? LIMIT 1 OFFSET 0";
+        $query = "SELECT 
+            p.id,
+            p.nome,
+            p.descricao,
+            p.foto,
+            p.fornecedor_id,
+            f.nome AS fornecedor_nome,
+            f.descricao AS fornecedor_descricao,
+            f.telefone AS fornecedor_telefone,
+            f.email AS fornecedor_email
+          FROM produto p
+          LEFT JOIN fornecedor f ON f.id = p.fornecedor_id
+          WHERE p.id = :id";
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $id);
@@ -67,18 +79,44 @@ class PostgresProdutoDao extends PostgresDao implements ProdutoDao {
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if($row) {
-            $produto = new Produto($row['id'], $row['nome'], $row['descricao'], $row['foto']);
+            $fornecedor = null;
             if ($row['fornecedor_id']) {
-                $produto->setFornecedor(new Fornecedor($row['fornecedor_id'], '', '', '', ''));
+                $fornecedor = new Fornecedor(
+                    $row['fornecedor_id'],
+                    $row['fornecedor_nome'],
+                    $row['fornecedor_descricao'],
+                    $row['fornecedor_telefone'],
+                    $row['fornecedor_email']
+                );
             }
-        }
 
-        return $produto;
-    }
+            $produto = new Produto(
+                $row['id'],
+                $row['nome'],
+                $row['descricao'],
+                $row['foto']
+            );
+            $produto->setFornecedor($fornecedor);
+
+            return $produto;
+        }
+    }    
 
     public function buscaTodos($limit = null, $offset = null) {
         $produtos = array();
-        $query = "SELECT id, nome, descricao, foto, fornecedor_id FROM " . $this->table_name . " ORDER BY id ASC";
+        $query = "SELECT 
+            p.id,
+            p.nome,
+            p.descricao,
+            p.foto,
+            p.fornecedor_id,
+            f.nome AS fornecedor_nome,
+            f.descricao AS fornecedor_descricao,
+            f.telefone AS fornecedor_telefone,
+            f.email AS fornecedor_email
+          FROM produto p
+          LEFT JOIN fornecedor f ON f.id = p.fornecedor_id
+          ORDER BY p.id ASC";
 
         if ($limit !== null && $offset !== null) {
             $query .= " LIMIT " . (int)$limit . " OFFSET " . (int)$offset;
@@ -90,7 +128,7 @@ class PostgresProdutoDao extends PostgresDao implements ProdutoDao {
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             $produto = new Produto($row['id'], $row['nome'], $row['descricao'], $row['foto']);
             if ($row['fornecedor_id']) {
-                $produto->setFornecedor(new Fornecedor($row['fornecedor_id'], '', '', '', ''));
+                $produto->setFornecedor(new Fornecedor($row['fornecedor_id'], $row['fornecedor_nome'], $row['fornecedor_descricao'], $row['fornecedor_telefone'], $row['fornecedor_email']));
             }
             $produtos[] = $produto;
         }
@@ -110,7 +148,7 @@ class PostgresProdutoDao extends PostgresDao implements ProdutoDao {
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             $produto = new Produto($row['id'], $row['nome'], $row['descricao'], $row['foto']);
             if ($row['fornecedor_id']) {
-                $produto->setFornecedor(new Fornecedor($row['fornecedor_id'], '', '', '', ''));
+                $produto->setFornecedor(new Fornecedor($row['fornecedor_id'], $row['fornecedor_nome'], $row['fornecedor_descricao'], $row['fornecedor_telefone'], $row['fornecedor_email']));
             }
             $produtos[] = $produto;
         }

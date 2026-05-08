@@ -18,8 +18,8 @@ if($endereco) {
 include_once dirname(__DIR__) . "/layout/layout_header.php";
 
 if($endereco) {
-    $fornecedorId = $endereco->getFornecedor() ? $endereco->getFornecedor()->getId() : '';
-    $clienteId = $endereco->getCliente() ? $endereco->getCliente()->getId() : '';
+    $fornecedorNome = $endereco->getFornecedor() ? $endereco->getFornecedor()->getNome() : '';
+    $clienteNome = $endereco->getCliente() ? $endereco->getCliente()->getNome() : '';
 
     echo "<section>";
     echo "<h1> Rua : " . $endereco->getRua() . "</h1>";
@@ -30,8 +30,8 @@ if($endereco) {
     echo "<p>CEP : " . $endereco->getCep() . "</p>";
     echo "<p>Cidade : " . $endereco->getCidade() . "</p>";
     echo "<p>Estado : " . $endereco->getEstado() . "</p>";
-    echo "<p>Fornecedor ID : " . $fornecedorId . "</p>";
-    echo "<p>Cliente ID : " . $clienteId . "</p>";
+    echo "<p>Fornecedor : " . $fornecedorNome . "</p>";
+    echo "<p>Cliente : " . $clienteNome . "</p>";
     echo "<a href='" . BASE_URL . "/views/listagem/lista_enderecos.php' class='btn btn-primary left-margin'>Voltar</a>";
     echo "</section>";
 }

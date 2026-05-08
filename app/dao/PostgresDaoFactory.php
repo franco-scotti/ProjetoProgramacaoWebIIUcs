@@ -12,7 +12,6 @@ include_once('PostgresItemPedidoDao.php');
 
 class PostgresDaofactory extends DaoFactory {
 
-    // specify your own database credentials
     private $host = "localhost";
     private $db_name = "PHP_tutorial";
     private $port = "5432";
@@ -20,13 +19,11 @@ class PostgresDaofactory extends DaoFactory {
     private $password = "1234";
     public $conn;
   
-    // get the database connection
     public function getConnection(){
   
         $this->conn = null;
   
         try{
-            //$this->conn = new PDO("pgsql:host=" . $this->host . ";port=" . $this->port . ";dbname=" . $this->db_name, $this->username, $this->password);
             $this->conn = new PDO("pgsql:host=localhost;port=5432;dbname=PHP_tutorial", $this->username, $this->password);
     
       }catch(PDOException $exception){

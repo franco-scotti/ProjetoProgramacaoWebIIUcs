@@ -13,13 +13,13 @@ function escreveLinhasProdutos($produtos) {
             $id = htmlspecialchars($produto->getId());
             $nome = htmlspecialchars($produto->getNome());
             $descricao = htmlspecialchars($produto->getDescricao());
-            $fornecedorId = $produto->getFornecedor() ? htmlspecialchars($produto->getFornecedor()->getId()) : '';
+            $fornecedorNome = $produto->getFornecedor() ? htmlspecialchars($produto->getFornecedor()->getNome()) : '';
 
             echo "<tr>";
             echo "<td>{$id}</td>";
             echo "<td>{$nome}</td>";
             echo "<td>{$descricao}</td>";
-            echo "<td>{$fornecedorId}</td>";
+            echo "<td>{$fornecedorNome}</td>";
             echo "<td>";
             echo "<a href='" . BASE_URL . "/views/detalhes/mostra_produto.php?id={$id}' class='btn btn-primary left-margin'><span class='glyphicon glyphicon-list'></span> Mostra</a>";
             echo "<a href='" . BASE_URL . "/views/altera/modifica_produto.php?id={$id}' class='btn btn-info left-margin'><span class='glyphicon glyphicon-edit'></span> Altera</a>";
@@ -34,7 +34,6 @@ function escreveLinhasProdutos($produtos) {
 
 $dao = $factory->getProdutoDao();
 
-// Requisicao AJAX: retorna somente as linhas da tabela
 if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
     $termo = isset($_GET['pesquisa']) ? trim($_GET['pesquisa']) : '';
 
@@ -73,7 +72,7 @@ $produtos = $dao->buscaTodos($itensPorPagina, $offset);
 
 echo "<table class='table table-hover table-responsive table-bordered'>";
 echo "<thead>";
-echo "<tr><th>Id</th><th>Nome</th><th>Descricao</th><th>FornecedorId</th><th>Acoes</th></tr>";
+echo "<tr><th>Id</th><th>Nome</th><th>Descricao</th><th>Fornecedor</th><th>Acoes</th></tr>";
 echo "</thead>";
 echo "<tbody id='resultadoProdutos'>";
 escreveLinhasProdutos($produtos);

@@ -18,13 +18,13 @@ if($itens) {
     echo "<tr><th>Id</th><th>PedidoId</th><th>ProdutoId</th><th>Quantidade</th><th>Preco</th><th>Acoes</th></tr>";
 
     foreach ($itens as $item) {
-        $pedidoId = $item->getPedido() ? $item->getPedido()->getId() : '';
-        $produtoId = $item->getProduto() ? $item->getProduto()->getId() : '';
+        $pedidoNumero = $item->getPedido() ? $item->getPedido()->getNumero() : '';
+        $produtoNome = $item->getProduto() ? $item->getProduto()->getNome() : '';
 
         echo "<tr>";
         echo "<td>{$item->getId()}</td>";
-        echo "<td>{$pedidoId}</td>";
-        echo "<td>{$produtoId}</td>";
+        echo "<td>{$pedidoNumero}</td>";
+        echo "<td>{$produtoNome}</td>";
         echo "<td>{$item->getQuantidade()}</td>";
         echo "<td>{$item->getPreco()}</td>";
         echo "<td>";

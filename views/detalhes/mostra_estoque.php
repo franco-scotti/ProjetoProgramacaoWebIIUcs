@@ -18,10 +18,10 @@ if($estoque) {
 include_once dirname(__DIR__) . "/layout/layout_header.php";
 
 if($estoque) {
-    $produtoId = $estoque->getProduto() ? $estoque->getProduto()->getId() : '';
+    $produtoNome = $estoque->getProduto() ? $estoque->getProduto()->getNome() : '';
     echo "<section>";
     echo "<h1> Estoque ID : " . $estoque->getId() . "</h1>";
-    echo "<p>Produto ID : " . $produtoId . "</p>";
+    echo "<p>Produto : " . $produtoNome . "</p>";
     echo "<p>Quantidade : " . $estoque->getQuantidade() . "</p>";
     echo "<p>Preco : " . $estoque->getPreco() . "</p>";
     echo "<a href='" . BASE_URL . "/views/listagem/lista_estoques.php' class='btn btn-primary left-margin'>Voltar</a>";

@@ -1,7 +1,6 @@
 <?php
 $page_title = "Demo : Autenticação Obrigatória";
 
-// layout do cabeçalho
 include_once "../views/layout/layout_header.php";
 ?>
 <section>
@@ -18,6 +17,5 @@ include_once "../views/layout/layout_header.php";
 </form>
 </section>
 <?php
-// layout do rodapé
 include_once "../views/layout/layout_footer.php";
 ?>

@@ -6,6 +6,7 @@ interface EnderecoDao {
     public function removePorId($id);
     public function altera(&$endereco);
     public function buscaPorId($id);
-    public function buscaTodos();
+    public function buscaTodos($offset = null, $limit = null);
+    public function contaTodos();
 }
 ?>

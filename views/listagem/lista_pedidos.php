@@ -18,7 +18,7 @@ if($pedidos) {
     echo "<tr><th>Id</th><th>Numero</th><th>Data Pedido</th><th>Data Entrega</th><th>Situacao</th><th>ClienteId</th><th>Acoes</th></tr>";
 
     foreach ($pedidos as $pedido) {
-        $clienteId = $pedido->getCliente() ? $pedido->getCliente()->getId() : '';
+        $clienteId = $pedido->getCliente() ? $pedido->getCliente()->getNome(): '';
         echo "<tr>";
         echo "<td>{$pedido->getId()}</td>";
         echo "<td>{$pedido->getNumero()}</td>";

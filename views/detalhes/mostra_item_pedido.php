@@ -18,12 +18,12 @@ if($item) {
 include_once dirname(__DIR__) . "/layout/layout_header.php";
 
 if($item) {
-    $pedidoId = $item->getPedido() ? $item->getPedido()->getId() : '';
-    $produtoId = $item->getProduto() ? $item->getProduto()->getId() : '';
+    $pedidoNumero = $item->getPedido() ? $item->getPedido()->getNumero() : '';
+    $produtoNome = $item->getProduto() ? $item->getProduto()->getNome() : '';
     echo "<section>";
     echo "<h1> Item ID : " . $item->getId() . "</h1>";
-    echo "<p>Pedido ID : " . $pedidoId . "</p>";
-    echo "<p>Produto ID : " . $produtoId . "</p>";
+    echo "<p>Pedido : " . $pedidoNumero . "</p>";
+    echo "<p>Produto : " . $produtoNome . "</p>";
     echo "<p>Quantidade : " . $item->getQuantidade() . "</p>";
     echo "<p>Preco : " . $item->getPreco() . "</p>";
     echo "<a href='" . BASE_URL . "/views/listagem/lista_itens_pedido.php' class='btn btn-primary left-margin'>Voltar</a>";

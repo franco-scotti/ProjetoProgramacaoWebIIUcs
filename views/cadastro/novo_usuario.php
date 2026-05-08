@@ -1,6 +1,5 @@
 <?php
 $page_title = "Demo : Inserção de Usuário";
-// layout do cabeçalho
 if (!defined('BASE_URL')) {
     define('BASE_URL', '/ProjetoProgramacaoWebIIUcs');
 }
@@ -42,7 +41,6 @@ if ($erro === "login_duplicado") {
 </form>
 </section>
 <?php
-// layout do rodapé
 include_once dirname(__DIR__) . "/layout/layout_footer.php";
 ?>
 

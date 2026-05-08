@@ -12,7 +12,6 @@ $id = @$_GET["id"];
 $dao = $factory->getUsuarioDao();
 $usuario = $dao->buscaPorId($id);
 
-// layout do cabeçalho
 include_once dirname(__DIR__) . "/layout/layout_header.php";
  ?>
  <section>
@@ -43,7 +42,6 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
 </form>
 </section>
 <?php
-// layout do rodapé
 include_once dirname(__DIR__) . "/layout/layout_footer.php";
 ?>
 
