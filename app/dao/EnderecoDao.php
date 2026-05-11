@@ -8,5 +8,6 @@ interface EnderecoDao {
     public function buscaPorId($id);
     public function buscaTodos($offset = null, $limit = null);
     public function contaTodos();
+    public function ultimoId();
 }
 ?>

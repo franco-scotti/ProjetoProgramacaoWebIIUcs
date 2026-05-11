@@ -23,7 +23,7 @@ function escreveLinhasFornecedores($fornecedores) {
                         echo "<span class='glyphicon glyphicon-list'></span> Mostra";
                     echo "</a>";
 
-                    echo "<a href='" . BASE_URL . "/views/altera/modifica_fornecedor.php?id={$fornecedor->getId()}' class='btn btn-info left-margin'>";
+                    echo "<a href='" . BASE_URL . "/views/cadastro/form_fornecedor.php?id={$fornecedor->getId()}' class='btn btn-info left-margin'>";
                         echo "<span class='glyphicon glyphicon-edit'></span> Altera";
                     echo "</a>";
 
@@ -110,7 +110,7 @@ if ($totalPaginas > 1) {
 
 echo "</div>";
 
-echo "<a href='" . BASE_URL . "/views/cadastro/novo_fornecedor.php' class='btn btn-primary left-margin'>Novo</a>";
+echo "<a href='" . BASE_URL . "/views/cadastro/form_fornecedor.php' class='btn btn-primary left-margin'>Novo</a>";
 
 echo "</section>";
 ?>

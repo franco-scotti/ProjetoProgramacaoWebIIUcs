@@ -26,7 +26,7 @@ if($clientes) {
         echo "<td>{$cliente->getCartaoCredito()}</td>";
         echo "<td>";
         echo "<a href='" . BASE_URL . "/views/detalhes/mostra_cliente.php?id={$cliente->getId()}' class='btn btn-primary left-margin'><span class='glyphicon glyphicon-list'></span> Mostra</a>";
-        echo "<a href='" . BASE_URL . "/views/altera/modifica_cliente.php?id={$cliente->getId()}' class='btn btn-info left-margin'><span class='glyphicon glyphicon-edit'></span> Altera</a>";
+        echo "<a href='" . BASE_URL . "/views/cadastro/form_cliente.php?id={$cliente->getId()}' class='btn btn-info left-margin'><span class='glyphicon glyphicon-edit'></span> Altera</a>";
         echo "<a href='" . BASE_URL . "/app/controllers/remove/remove_cliente.php?id={$cliente->getId()}' class='btn btn-danger left-margin' onclick=\"return confirm('Tem certeza que quer excluir?')\"><span class='glyphicon glyphicon-remove'></span> Exclui</a>";
         echo "</td>";
         echo "</tr>";
@@ -35,7 +35,7 @@ if($clientes) {
     echo "</table>";
 }
 
-echo "<a href='" . BASE_URL . "/views/cadastro/novo_cliente.php' class='btn btn-primary left-margin'>Novo</a>";
+echo "<a href='" . BASE_URL . "/views/cadastro/form_cliente.php' class='btn btn-primary left-margin'>Novo</a>";
 
 echo "</section>";
 

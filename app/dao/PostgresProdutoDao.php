@@ -138,8 +138,22 @@ class PostgresProdutoDao extends PostgresDao implements ProdutoDao {
 
     public function buscaPorCodigoNome($termo) {
         $produtos = array();
-        $query = "SELECT id, nome, descricao, foto, fornecedor_id FROM " . $this->table_name .
-                 " WHERE CAST(id AS TEXT) ILIKE :termo OR nome ILIKE :termo ORDER BY id ASC";
+        $query = "SELECT 
+            p.id,
+            p.nome,
+            p.descricao,
+            p.foto,
+            p.fornecedor_id,
+
+            f.id AS fornecedor_id,
+            f.nome AS fornecedor_nome,
+            f.descricao AS fornecedor_descricao,
+            f.telefone AS fornecedor_telefone,
+            f.email AS fornecedor_email
+          FROM produto p
+          LEFT JOIN fornecedor f ON f.id = p.fornecedor_id
+          WHERE CAST(p.id AS TEXT) ILIKE :termo OR p.nome ILIKE :termo
+          ORDER BY p.id ASC";
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindValue(':termo', '%' . $termo . '%');

@@ -1,6 +1,9 @@
 <?php 
-// Métodos de acesso ao banco de dados 
-require "fachada.php"; 
+if (!defined('BASE_URL')) {
+    define('BASE_URL', '/ProjetoProgramacaoWebIIUcs');
+}
+
+require "../../../routes/fachada.php"; 
  
 session_start();
 
@@ -24,8 +27,7 @@ if($usuario) {
     { 
         $_SESSION["id_usuario"]= $usuario->getId(); 
         $_SESSION["nome_usuario"] = stripslashes($usuario->getNome()); 
-        //$_SESSION["permissao"]= $dados["postar"]; 
-        header("Location: index.php"); 
+        header("Location: " . BASE_URL . "/public/index.php"); 
         exit; 
     } else {
         $problemas = TRUE; 

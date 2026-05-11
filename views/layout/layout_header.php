@@ -31,7 +31,6 @@ $menuPrincipal = array(
 );
 
 $menuGestao = array(
-    '/ProjetoProgramacaoWebIIUcs/views/listagem/lista_enderecos.php' => 'Enderecos',
     '/ProjetoProgramacaoWebIIUcs/views/listagem/lista_itens_pedido.php' => 'Itens Pedido'
 );
 ?>

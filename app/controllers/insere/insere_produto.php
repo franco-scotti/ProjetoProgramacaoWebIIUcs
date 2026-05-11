@@ -2,21 +2,42 @@
 if (!defined('BASE_URL')) {
     define('BASE_URL', '/ProjetoProgramacaoWebIIUcs');
 }
-include_once dirname(__DIR__, 3) . "/routes/fachada.php";
 
-$nome = trim((string)@$_GET["nome"]);
-$descricao = trim((string)@$_GET["descricao"]);
-$foto = trim((string)@$_GET["foto"]);
-$fornecedorId = trim((string)@$_GET["fornecedor_id"]);
+include_once dirname(__DIR__, 2) . "/routes/fachada.php";
 
-$produto = new Produto(null, $nome, $descricao, $foto);
-if ($fornecedorId !== "") {
-    $produto->setFornecedor(new Fornecedor($fornecedorId, '', '', '', ''));
+$clienteDao = $factory->getClienteDao();
+$enderecoDao = $factory->getEnderecoDao();
+
+$endereco = new Endereco(
+    null,
+    $_GET['rua'],
+    $_GET['numero'],
+    $_GET['complemento'],
+    $_GET['bairro'],
+    $_GET['cep'],
+    $_GET['cidade'],
+    $_GET['estado']
+);
+
+$enderecoDao->insere($endereco);
+
+$endereco_id = $enderecoDao->ultimoId();
+
+$cliente = new Cliente(
+    null,
+    $_GET['nome'],
+    $_GET['telefone'],
+    $_GET['email'],
+    $_GET['cartao_credito']
+);
+
+$cliente->setEndereco(new Endereco($endereco_id, '', '', '', '', '', '', ''));
+
+if ($clienteDao->insere($cliente)) {
+    header("Location: " . BASE_URL . "/views/listagem/lista_clientes.php");
+} else {
+    header("Location: " . BASE_URL . "/views/cadastro/form_cliente.php?erro=erro_insercao");
 }
 
-$dao = $factory->getProdutoDao();
-$dao->insere($produto);
-
-header("Location: " . BASE_URL . "/views/listagem/lista_produtos.php");
 exit;
 ?>

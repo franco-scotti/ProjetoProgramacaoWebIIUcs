@@ -1,5 +1,4 @@
 <?php 
-// Inicia sessões 
 include_once "comum.php";
 		
 //if ( is_session_started() === FALSE ) {
@@ -11,8 +10,7 @@ error_log("LOGIN");
 if(!isset($_SESSION["id_usuario"]) || !isset($_SESSION["nome_usuario"])) 
 { 
     error_log("SEM USUÀRIO LOGADO - Vai para login.php");
-    // Usuário não logado! Redireciona para a página de login 
-    header("Location: login.php"); 
+    header("Location: /ProjetoProgramacaoWebIIUcs/public/login.php"); 
     exit; 
 } 
 ?>

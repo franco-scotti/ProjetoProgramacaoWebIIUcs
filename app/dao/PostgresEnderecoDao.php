@@ -8,20 +8,9 @@ class PostgresEnderecoDao extends PostgresDao implements EnderecoDao {
     private $table_name = 'endereco';
 
     public function insere($endereco) {
-        $fornecedor_id = null;
-        $cliente_id = null;
-
-        if ($endereco->getFornecedor() !== null) {
-            $fornecedor_id = $endereco->getFornecedor()->getId();
-        }
-
-        if ($endereco->getCliente() !== null) {
-            $cliente_id = $endereco->getCliente()->getId();
-        }
-
         $query = "INSERT INTO " . $this->table_name .
-        " (rua, numero, complemento, bairro, cep, cidade, estado, fornecedor_id, cliente_id) VALUES" .
-        " (:rua, :numero, :complemento, :bairro, :cep, :cidade, :estado, :fornecedor_id, :cliente_id)";
+        " (rua, numero, complemento, bairro, cep, cidade, estado) VALUES" .
+        " (:rua, :numero, :complemento, :bairro, :cep, :cidade, :estado)";
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindValue(':rua', $endereco->getRua());
@@ -31,8 +20,6 @@ class PostgresEnderecoDao extends PostgresDao implements EnderecoDao {
         $stmt->bindValue(':cep', $endereco->getCep());
         $stmt->bindValue(':cidade', $endereco->getCidade());
         $stmt->bindValue(':estado', $endereco->getEstado());
-        $stmt->bindValue(':fornecedor_id', $fornecedor_id);
-        $stmt->bindValue(':cliente_id', $cliente_id);
 
         return $stmt->execute();
     }
@@ -49,22 +36,19 @@ class PostgresEnderecoDao extends PostgresDao implements EnderecoDao {
     }
 
     public function altera(&$endereco) {
-        $fornecedor_id = null;
-        $cliente_id = null;
-
-        if ($endereco->getFornecedor() !== null) {
-            $fornecedor_id = $endereco->getFornecedor()->getId();
-        }
-
-        if ($endereco->getCliente() !== null) {
-            $cliente_id = $endereco->getCliente()->getId();
-        }
 
         $query = "UPDATE " . $this->table_name .
-        " SET rua = :rua, numero = :numero, complemento = :complemento, bairro = :bairro, cep = :cep, cidade = :cidade, estado = :estado, fornecedor_id = :fornecedor_id, cliente_id = :cliente_id" .
-        " WHERE id = :id";
+        " SET rua = :rua,
+            numero = :numero,
+            complemento = :complemento,
+            bairro = :bairro,
+            cep = :cep,
+            cidade = :cidade,
+            estado = :estado
+        WHERE id = :id";
 
         $stmt = $this->conn->prepare($query);
+
         $stmt->bindValue(':rua', $endereco->getRua());
         $stmt->bindValue(':numero', $endereco->getNumero());
         $stmt->bindValue(':complemento', $endereco->getComplemento());
@@ -72,8 +56,6 @@ class PostgresEnderecoDao extends PostgresDao implements EnderecoDao {
         $stmt->bindValue(':cep', $endereco->getCep());
         $stmt->bindValue(':cidade', $endereco->getCidade());
         $stmt->bindValue(':estado', $endereco->getEstado());
-        $stmt->bindValue(':fornecedor_id', $fornecedor_id);
-        $stmt->bindValue(':cliente_id', $cliente_id);
         $stmt->bindValue(':id', $endereco->getId());
 
         return $stmt->execute();
@@ -126,30 +108,6 @@ class PostgresEnderecoDao extends PostgresDao implements EnderecoDao {
                 $row['cidade'],
                 $row['estado']
             );
-
-            if ($row['fornecedor_id']) {
-                $fornecedor = new Fornecedor(
-                    $row['fornecedor_id'],
-                    $row['fornecedor_nome'],
-                    $row['fornecedor_descricao'],
-                    $row['fornecedor_telefone'],
-                    $row['fornecedor_email']
-                );
-
-                $endereco->setFornecedor($fornecedor);
-            }
-
-            if ($row['cliente_id']) {
-                $cliente = new Cliente(
-                    $row['cliente_id'],
-                    $row['cliente_nome'],
-                    $row['cliente_telefone'],
-                    $row['cliente_email'],
-                    $row['cliente_cartao_credito']
-                );
-
-                $endereco->setCliente($cliente);
-            }
         }
 
         return $endereco;
@@ -166,22 +124,8 @@ class PostgresEnderecoDao extends PostgresDao implements EnderecoDao {
                     e.bairro,
                     e.cep,
                     e.cidade,
-                    e.estado,
-                    e.fornecedor_id,
-                    e.cliente_id,
-
-                    f.nome AS fornecedor_nome,
-                    f.descricao AS fornecedor_descricao,
-                    f.telefone AS fornecedor_telefone,
-                    f.email AS fornecedor_email,
-
-                    c.nome AS cliente_nome,
-                    c.telefone AS cliente_telefone,
-                    c.email AS cliente_email,
-                    c.cartao_credito AS cliente_cartao_credito
+                    e.estado
                   FROM endereco e
-                  LEFT JOIN fornecedor f ON f.id = e.fornecedor_id
-                  LEFT JOIN cliente c ON c.id = e.cliente_id
                   ORDER BY e.id ASC";
 
         if ($limit !== null && $offset !== null) {
@@ -209,30 +153,6 @@ class PostgresEnderecoDao extends PostgresDao implements EnderecoDao {
                 $row['estado']
             );
 
-            if ($row['fornecedor_id']) {
-                $fornecedor = new Fornecedor(
-                    $row['fornecedor_id'],
-                    $row['fornecedor_nome'],
-                    $row['fornecedor_descricao'],
-                    $row['fornecedor_telefone'],
-                    $row['fornecedor_email']
-                );
-
-                $endereco->setFornecedor($fornecedor);
-            }
-
-            if ($row['cliente_id']) {
-                $cliente = new Cliente(
-                    $row['cliente_id'],
-                    $row['cliente_nome'],
-                    $row['cliente_telefone'],
-                    $row['cliente_email'],
-                    $row['cliente_cartao_credito']
-                );
-
-                $endereco->setCliente($cliente);
-            }
-
             $enderecos[] = $endereco;
         }
 
@@ -248,6 +168,17 @@ class PostgresEnderecoDao extends PostgresDao implements EnderecoDao {
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $row['total'];
+    }
+
+    public function ultimoId() {
+        $query = "SELECT currval(pg_get_serial_sequence('endereco', 'id')) as id";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $row['id'];
     }
 }
 ?>

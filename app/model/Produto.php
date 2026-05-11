@@ -29,7 +29,12 @@ class Produto {
     public function getDescricao() { return $this->descricao; }
     public function setDescricao($descricao) {$this->descricao = $descricao;}
 
-    public function getFoto() { return $this->foto; }
+    public function getFoto() { 
+        if (is_resource($this->foto)) {
+            return stream_get_contents($this->foto);
+        }
+        return $this->foto; 
+    }
     public function setFoto($foto) {$this->foto = $foto;}
 
     public function getFornecedor() { return $this->fornecedor; }
