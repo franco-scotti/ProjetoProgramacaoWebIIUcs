@@ -11,6 +11,8 @@ $cliente = null;
 $endereco = null;
 
 $clienteDao = $factory->getClienteDao();
+$usuarioDao = $factory->getUsuarioDao();
+$usuarios = $usuarioDao->buscaTodos();
 
 if ($id) {
     $cliente = $clienteDao->buscaPorId($id);
@@ -61,6 +63,21 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
             <td>
                 <input type='text' name='email' class='form-control'
                        value="<?= $cliente ? $cliente->getEmail() : '' ?>" />
+            </td>
+        </tr>
+
+        <tr>
+            <td>Usuário</td>
+            <td>
+                <select name='usuario_id' class='form-control'>
+                    <option value=''>Nenhum usuário</option>
+                    <?php foreach ($usuarios as $usuario): ?>
+                        <option value="<?= $usuario->getId() ?>"
+                            <?= ($cliente && $cliente->getUsuarioId() == $usuario->getId()) ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($usuario->getLogin()) ?> - <?= htmlspecialchars($usuario->getNome()) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
             </td>
         </tr>
 

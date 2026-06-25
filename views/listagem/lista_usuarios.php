@@ -14,6 +14,7 @@ function escreveLinhasUsuarios($usuarios) {
             echo "<td>{$usuario->getId()}</td>";
             echo "<td>{$usuario->getLogin()}</td>";
             echo "<td>{$usuario->getNome()}</td>";
+            echo "<td>" . ($usuario->isAdmin() ? 'Sim' : 'Não') . "</td>";
             echo "<td>";
             echo "<a href='" . BASE_URL . "/views/detalhes/mostra_usuario.php?id={$usuario->getId()}' class='btn btn-primary left-margin'>";
             echo "<span class='glyphicon glyphicon-list'></span> Mostra";
@@ -79,6 +80,7 @@ echo "<table class='table table-hover table-responsive table-bordered'>";
         echo "<th>Id</th>";
         echo "<th>Login</th>";
         echo "<th>Nome</th>";
+        echo "<th>Admin</th>";
         echo "<th>Ações</th>";
     echo "</tr>";
 

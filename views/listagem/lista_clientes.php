@@ -5,6 +5,12 @@ if (!defined('BASE_URL')) {
     define('BASE_URL', '/ProjetoProgramacaoWebIIUcs');
 }
 
+include_once dirname(__DIR__, 2) . "/app/controllers/login/verifica.php";
+if (!isset($_SESSION['usuario_tipo']) || $_SESSION['usuario_tipo'] !== 'admin') {
+    header('Location: ' . BASE_URL . '/public/login.php');
+    exit;
+}
+
 include_once dirname(__DIR__) . "/layout/layout_header.php";
 include_once dirname(__DIR__, 2) . "/routes/fachada.php";
 

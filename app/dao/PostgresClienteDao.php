@@ -15,8 +15,8 @@ class PostgresClienteDao extends PostgresDao implements ClienteDao {
         }
 
         $query = "INSERT INTO " . $this->table_name .
-        " (nome, telefone, email, cartao_credito, endereco_id) VALUES" .
-        " (:nome, :telefone, :email, :cartao_credito, :endereco_id)";
+        " (nome, telefone, email, cartao_credito, endereco_id, usuario_id) VALUES" .
+        " (:nome, :telefone, :email, :cartao_credito, :endereco_id, :usuario_id)";
 
         $stmt = $this->conn->prepare($query);
         $stmt->bindValue(':nome', $cliente->getNome());
@@ -47,7 +47,7 @@ class PostgresClienteDao extends PostgresDao implements ClienteDao {
         }
 
         $query = "UPDATE " . $this->table_name .
-        " SET nome = :nome, telefone = :telefone, email = :email, cartao_credito = :cartao_credito, endereco_id = :endereco_id" .
+        " SET nome = :nome, telefone = :telefone, email = :email, cartao_credito = :cartao_credito, endereco_id = :endereco_id, usuario_id = :usuario_id" .
         " WHERE id = :id";
 
         $stmt = $this->conn->prepare($query);
@@ -56,6 +56,7 @@ class PostgresClienteDao extends PostgresDao implements ClienteDao {
         $stmt->bindValue(':email', $cliente->getEmail());
         $stmt->bindValue(':cartao_credito', $cliente->getCartaoCredito());
         $stmt->bindValue(':endereco_id', $endereco_id);
+        $stmt->bindValue(':usuario_id', $cliente->getUsuarioId());
         $stmt->bindValue(':id', $cliente->getId());
 
         return $stmt->execute();
@@ -70,6 +71,7 @@ class PostgresClienteDao extends PostgresDao implements ClienteDao {
                     c.telefone,
                     c.email,
                     c.cartao_credito,
+                    c.usuario_id,
                     c.endereco_id,
 
                     e.rua AS endereco_rua,
@@ -97,8 +99,77 @@ class PostgresClienteDao extends PostgresDao implements ClienteDao {
                 $row['nome'],
                 $row['telefone'],
                 $row['email'],
-                $row['cartao_credito']
+                $row['cartao_credito'],
+                $row['usuario_id']
             );
+
+            if ($row['usuario_id']) {
+                $cliente->setUsuarioId($row['usuario_id']);
+            }
+
+            if ($row['endereco_id']) {
+                $endereco = new Endereco(
+                    $row['endereco_id'],
+                    $row['endereco_rua'],
+                    $row['endereco_numero'],
+                    $row['endereco_complemento'],
+                    $row['endereco_bairro'],
+                    $row['endereco_cep'],
+                    $row['endereco_cidade'],
+                    $row['endereco_estado']
+                );
+
+                $cliente->setEndereco($endereco);
+            }
+        }
+
+        return $cliente;
+    }
+
+    public function buscaPorUsuarioId($usuarioId) {
+        $cliente = null;
+
+        $query = "SELECT 
+                    c.id,
+                    c.nome,
+                    c.telefone,
+                    c.email,
+                    c.cartao_credito,
+                    c.usuario_id,
+                    c.endereco_id,
+
+                    e.rua AS endereco_rua,
+                    e.numero AS endereco_numero,
+                    e.complemento AS endereco_complemento,
+                    e.bairro AS endereco_bairro,
+                    e.cep AS endereco_cep,
+                    e.cidade AS endereco_cidade,
+                    e.estado AS endereco_estado
+
+                  FROM cliente c
+                  LEFT JOIN endereco e ON e.id = c.endereco_id
+                  WHERE c.usuario_id = ?
+                  LIMIT 1 OFFSET 0";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $usuarioId);
+        $stmt->execute();
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if($row) {
+            $cliente = new Cliente(
+                $row['id'],
+                $row['nome'],
+                $row['telefone'],
+                $row['email'],
+                $row['cartao_credito'],
+                $row['usuario_id']
+            );
+
+            if ($row['usuario_id']) {
+                $cliente->setUsuarioId($row['usuario_id']);
+            }
 
             if ($row['endereco_id']) {
                 $endereco = new Endereco(
@@ -128,6 +199,7 @@ class PostgresClienteDao extends PostgresDao implements ClienteDao {
                     c.telefone,
                     c.email,
                     c.cartao_credito,
+                    c.usuario_id,
                     c.endereco_id,
 
                     e.rua AS endereco_rua,
@@ -161,8 +233,13 @@ class PostgresClienteDao extends PostgresDao implements ClienteDao {
                 $row['nome'],
                 $row['telefone'],
                 $row['email'],
-                $row['cartao_credito']
+                $row['cartao_credito'],
+                $row['usuario_id']
             );
+
+            if ($row['usuario_id']) {
+                $cliente->setUsuarioId($row['usuario_id']);
+            }
 
             if ($row['endereco_id']) {
                 $endereco = new Endereco(

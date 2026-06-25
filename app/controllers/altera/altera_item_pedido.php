@@ -21,6 +21,10 @@ if ($produtoId !== "") {
 $dao = $factory->getItemPedidoDao();
 $dao->altera($item);
 
-header("Location: " . BASE_URL . "/views/listagem/lista_itens_pedido.php");
+if ($pedidoId !== "") {
+    header("Location: " . BASE_URL . "/views/detalhes/mostra_pedido.php?id=" . $pedidoId);
+} else {
+    header("Location: " . BASE_URL . "/views/listagem/lista_pedidos.php");
+}
 exit;
 ?>

@@ -31,7 +31,7 @@ $produtos = $produtoDao->buscaTodos();
         </select></td></tr>
         <tr><td>Quantidade</td><td><input type='text' name='quantidade' class='form-control' /></td></tr>
         <tr><td>Preco</td><td><input type='text' name='preco' class='form-control' /></td></tr>
-        <tr><td></td><td><button type="submit" class="btn btn-primary">Inserir</button> <a href='<?= BASE_URL ?>/views/listagem/lista_itens_pedido.php' class='btn btn-primary left-margin'>Cancela</a></td></tr>
+        <tr><td></td><td><button type="submit" class="btn btn-primary">Inserir</button> <a href='<?= BASE_URL ?>/views/listagem/lista_pedidos.php' class='btn btn-primary left-margin'>Cancela</a></td></tr>
     </table>
 </form>
 </section>

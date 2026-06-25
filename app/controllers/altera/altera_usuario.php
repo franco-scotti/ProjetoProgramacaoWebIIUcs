@@ -8,8 +8,9 @@ $id = @$_GET["id"];
 $login = @$_GET["login"];
 $senha = @$_GET["senha"];
 $nome = @$_GET["nome"];
+$admin = isset($_GET['admin']) && $_GET['admin'] == '1';
 
-$usuario = new Usuario($id,$login,$senha,$nome);
+$usuario = new Usuario($id,$login,$senha,$nome,$admin);
 $dao = $factory->getUsuarioDao();
 
 $usuario->setSenha(md5($usuario->getLogin().$usuario->getSenha()));

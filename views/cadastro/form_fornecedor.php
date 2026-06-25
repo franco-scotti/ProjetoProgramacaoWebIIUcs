@@ -11,6 +11,8 @@ $fornecedor = null;
 $endereco = null;
 
 $fornecedorDao = $factory->getFornecedorDao();
+$usuarioDao = $factory->getUsuarioDao();
+$usuarios = $usuarioDao->buscaTodos();
 
 if ($id) {
     $fornecedor = $fornecedorDao->buscaPorId($id);
@@ -69,6 +71,21 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
             <td>
                 <input type='text' name='email' class='form-control'
                        value="<?= $fornecedor ? $fornecedor->getEmail() : '' ?>" />
+            </td>
+        </tr>
+
+        <tr>
+            <td>Usuário</td>
+            <td>
+                <select name='usuario_id' class='form-control'>
+                    <option value=''>Nenhum usuário</option>
+                    <?php foreach ($usuarios as $usuario): ?>
+                        <option value="<?= $usuario->getId() ?>"
+                            <?= ($fornecedor && $fornecedor->getUsuarioId() == $usuario->getId()) ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($usuario->getLogin()) ?> - <?= htmlspecialchars($usuario->getNome()) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
             </td>
         </tr>
 

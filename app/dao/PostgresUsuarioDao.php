@@ -10,14 +10,15 @@ class PostgresUsuarioDao extends PostgresDao implements UsuarioDao {
     public function insere($usuario) {
 
         $query = "INSERT INTO " . $this->table_name . 
-        " (login, senha, nome) VALUES" .
-        " (:login, :senha, :nome)";
+        " (login, senha, nome, admin) VALUES" .
+        " (:login, :senha, :nome, :admin)";
 
         $stmt = $this->conn->prepare($query);
 
         $stmt->bindValue(":login", $usuario->getLogin());
         $stmt->bindValue(":senha", $usuario->getSenha());
         $stmt->bindValue(":nome", $usuario->getNome());
+        $stmt->bindValue(":admin", $usuario->isAdmin(), PDO::PARAM_BOOL);
 
         if($stmt->execute()){
             return true;
@@ -49,7 +50,7 @@ class PostgresUsuarioDao extends PostgresDao implements UsuarioDao {
     public function altera(&$usuario) {
 
         $query = "UPDATE " . $this->table_name . 
-        " SET login = :login, senha = :senha, nome = :nome" .
+        " SET login = :login, senha = :senha, nome = :nome, admin = :admin" .
         " WHERE id = :id";
 
         $stmt = $this->conn->prepare($query);
@@ -57,6 +58,7 @@ class PostgresUsuarioDao extends PostgresDao implements UsuarioDao {
         $stmt->bindValue(":login", $usuario->getLogin());
         $stmt->bindValue(":senha", $usuario->getSenha());
         $stmt->bindValue(":nome", $usuario->getNome());
+        $stmt->bindValue(":admin", $usuario->isAdmin(), PDO::PARAM_BOOL);
         $stmt->bindValue(':id', $usuario->getId());
 
         if($stmt->execute()){
@@ -71,7 +73,7 @@ class PostgresUsuarioDao extends PostgresDao implements UsuarioDao {
         $usuario = null;
 
         $query = "SELECT
-                    id, login, nome, senha
+                    id, login, nome, senha, admin
                 FROM
                     " . $this->table_name . "
                 WHERE
@@ -96,7 +98,7 @@ class PostgresUsuarioDao extends PostgresDao implements UsuarioDao {
         $usuario = null;
 
         $query = "SELECT
-                    id, login, nome, senha
+                    id, login, nome, senha, admin
                 FROM
                     " . $this->table_name . "
                 WHERE
@@ -137,7 +139,7 @@ class PostgresUsuarioDao extends PostgresDao implements UsuarioDao {
         $usuarios = array();
 
         $query = "SELECT
-                    id, login, senha, nome
+                    id, login, nome, senha, admin
                 FROM
                     " . $this->table_name . 
                     " ORDER BY id ASC";
@@ -157,7 +159,7 @@ class PostgresUsuarioDao extends PostgresDao implements UsuarioDao {
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
             extract($row);
-            $usuarios[] = new Usuario($id,$login,$senha,$nome);
+            $usuarios[] = new Usuario($id,$login,$senha,$nome,$admin);
         }
         
         return $usuarios;
@@ -166,7 +168,7 @@ class PostgresUsuarioDao extends PostgresDao implements UsuarioDao {
     public function buscaPorCodigoNome($termo) {
         $usuarios = array();
 
-        $query = "SELECT id, login, senha, nome
+        $query = "SELECT id, login, nome, senha, admin
                 FROM " . $this->table_name . "
                 WHERE CAST(id AS TEXT) ILIKE :termo
                     OR nome ILIKE :termo
@@ -178,7 +180,7 @@ class PostgresUsuarioDao extends PostgresDao implements UsuarioDao {
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-            $usuarios[] = new Usuario($row['id'], $row['login'], $row['senha'], $row['nome']);
+            $usuarios[] = new Usuario($row['id'], $row['login'], $row['senha'], $row['nome'], $row['admin']);
         }
 
         return $usuarios;

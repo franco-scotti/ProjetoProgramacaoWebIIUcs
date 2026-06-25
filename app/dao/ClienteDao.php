@@ -6,6 +6,8 @@ interface ClienteDao {
     public function removePorId($id);
     public function altera(&$cliente);
     public function buscaPorId($id);
-    public function buscaTodos();
+    public function buscaPorUsuarioId($usuarioId);
+    public function buscaTodos($limit = null, $offset = null);
+    public function contaTodos();
 }
 ?>

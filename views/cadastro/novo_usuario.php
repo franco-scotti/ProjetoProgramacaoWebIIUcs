@@ -32,6 +32,10 @@ if ($erro === "login_duplicado") {
             <td><input type='text' name='nome' class='form-control' /></td>
         </tr>
         <tr>
+            <td>Admin</td>
+            <td><input type='checkbox' name='admin' value='1' /></td>
+        </tr>
+        <tr>
             <td></td>
             <td>
                 <button type="submit" class="btn btn-primary">Inserir</button>

@@ -5,10 +5,8 @@ if (!defined('BASE_URL')) {
     define('BASE_URL', '/ProjetoProgramacaoWebIIUcs');
 }
 
-include_once dirname(__DIR__) . "/layout/layout_header.php";
-include_once dirname(__DIR__, 2) . "/routes/fachada.php";
-
-echo "<section>";
+header('Location: ' . BASE_URL . '/views/listagem/lista_pedidos.php');
+exit;
 
 $dao = $factory->getItemPedidoDao();
 $itens = $dao->buscaTodos();

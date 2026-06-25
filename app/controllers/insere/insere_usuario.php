@@ -11,6 +11,7 @@ $nome = @$_GET["nome"];
 $login = trim((string)$login);
 $senha = trim((string)$senha);
 $nome = trim((string)$nome);
+$admin = isset($_GET['admin']) && $_GET['admin'] == '1';
 
 $dao = $factory->getUsuarioDao();
 
@@ -24,7 +25,7 @@ if ($dao->buscaPorLogin($login) !== null) {
     exit;
 }
 
-$usuario = new Usuario(null,$login,$senha,$nome);
+$usuario = new Usuario(null,$login,$senha,$nome,$admin);
 $ok = $dao->insere($usuario);
 
 if(!$ok){

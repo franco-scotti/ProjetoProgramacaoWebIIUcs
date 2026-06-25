@@ -46,7 +46,7 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
         </select></td></tr>
         <tr><td>Quantidade</td><td><input type='text' name='quantidade' value='<?php echo $item->getQuantidade();?>' class='form-control' /></td></tr>
         <tr><td>Preco</td><td><input type='text' name='preco' value='<?php echo $item->getPreco();?>' class='form-control' /></td></tr>
-        <tr><td></td><td><button type="submit" class="btn btn-primary">Alterar</button> <a href='<?= BASE_URL ?>/views/listagem/lista_itens_pedido.php' class='btn btn-primary left-margin'>Cancela</a></td></tr>
+        <tr><td></td><td><button type="submit" class="btn btn-primary">Alterar</button> <a href='<?= BASE_URL ?>/views/detalhes/mostra_pedido.php?id=<?php echo $pedidoId ?>' class='btn btn-primary left-margin'>Cancela</a></td></tr>
     </table>
     <input type='hidden' name='id' value='<?php echo $item->getId();?>'/>
 </form>

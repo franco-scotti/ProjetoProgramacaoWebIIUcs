@@ -24,9 +24,14 @@ if($item) {
     echo "<h1> Item ID : " . $item->getId() . "</h1>";
     echo "<p>Pedido : " . $pedidoNumero . "</p>";
     echo "<p>Produto : " . $produtoNome . "</p>";
+    $pedidoId = $item->getPedido() ? $item->getPedido()->getId() : null;
     echo "<p>Quantidade : " . $item->getQuantidade() . "</p>";
     echo "<p>Preco : " . $item->getPreco() . "</p>";
-    echo "<a href='" . BASE_URL . "/views/listagem/lista_itens_pedido.php' class='btn btn-primary left-margin'>Voltar</a>";
+    if ($pedidoId) {
+        echo "<a href='" . BASE_URL . "/views/detalhes/mostra_pedido.php?id=" . $pedidoId . "' class='btn btn-primary left-margin'>Voltar</a>";
+    } else {
+        echo "<a href='" . BASE_URL . "/views/listagem/lista_pedidos.php' class='btn btn-primary left-margin'>Voltar</a>";
+    }
     echo "</section>";
 }
 

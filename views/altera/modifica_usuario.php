@@ -30,6 +30,10 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
             <td><input type='password' name='senha' value='<?php echo $usuario->getSenha();?>' class='form-control' /></td>
         </tr>
         <tr>
+            <td>Admin</td>
+            <td><input type='checkbox' name='admin' value='1' <?= $usuario->isAdmin() ? 'checked' : '' ?> /></td>
+        </tr>
+        <tr>
             <td>
             </td>
             <td>

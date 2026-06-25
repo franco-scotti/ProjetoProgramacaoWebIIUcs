@@ -39,12 +39,16 @@ if ($endereco_id) {
     $endereco_id = $enderecoDao->ultimoId();
 }
 
+$usuarioId = isset($_GET['usuario_id']) ? trim((string)$_GET['usuario_id']) : null;
+$usuarioId = $usuarioId !== '' ? $usuarioId : null;
+
 $fornecedor = new Fornecedor(
     $_GET['id'],
     $_GET['nome'],
     $_GET['descricao'],
     $_GET['telefone'],
-    $_GET['email']
+    $_GET['email'],
+    $usuarioId
 );
 
 $fornecedor->setEndereco(new Endereco($endereco_id, '', '', '', '', '', '', ''));

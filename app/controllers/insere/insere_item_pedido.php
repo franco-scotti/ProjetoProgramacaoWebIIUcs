@@ -2,7 +2,7 @@
 if (!defined('BASE_URL')) {
     define('BASE_URL', '/ProjetoProgramacaoWebIIUcs');
 }
-include_once dirname(__DIR__, 3) . "/routes/fachada.php";
+include_once dirname(__DIR__, 3) . "/routes/fachada.php"; // existing controller, keep as is
 
 $pedidoId = trim((string)@$_GET["pedido_id"]);
 $produtoId = trim((string)@$_GET["produto_id"]);
@@ -20,6 +20,10 @@ if ($produtoId !== "") {
 $dao = $factory->getItemPedidoDao();
 $dao->insere($item);
 
-header("Location: " . BASE_URL . "/views/listagem/lista_itens_pedido.php");
+if ($pedidoId !== "") {
+    header("Location: " . BASE_URL . "/views/detalhes/mostra_pedido.php?id=" . $pedidoId);
+} else {
+    header("Location: " . BASE_URL . "/views/listagem/lista_pedidos.php");
+}
 exit;
 ?>

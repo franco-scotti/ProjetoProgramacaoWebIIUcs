@@ -16,8 +16,8 @@ class PostgresFornecedorDao extends PostgresDao implements FornecedorDao {
         }
 
         $query = "INSERT INTO " . $this->table_name .
-        " (nome, descricao, telefone, email, endereco_id) VALUES" .
-        " (:nome, :descricao, :telefone, :email, :endereco_id)";
+        " (nome, descricao, telefone, email, endereco_id, usuario_id) VALUES" .
+        " (:nome, :descricao, :telefone, :email, :endereco_id, :usuario_id)";
 
         $stmt = $this->conn->prepare($query);
 
@@ -26,6 +26,7 @@ class PostgresFornecedorDao extends PostgresDao implements FornecedorDao {
         $stmt->bindValue(":telefone", $fornecedor->getTelefone());
         $stmt->bindValue(":email", $fornecedor->getEmail());
         $stmt->bindValue(":endereco_id", $endereco_id);
+        $stmt->bindValue(":usuario_id", $fornecedor->getUsuarioId());
 
         if($stmt->execute()){
             return true;
@@ -61,7 +62,7 @@ class PostgresFornecedorDao extends PostgresDao implements FornecedorDao {
         }
 
         $query = "UPDATE " . $this->table_name .
-        " SET nome = :nome, descricao = :descricao, telefone = :telefone, email = :email, endereco_id = :endereco_id" .
+        " SET nome = :nome, descricao = :descricao, telefone = :telefone, email = :email, endereco_id = :endereco_id, usuario_id = :usuario_id" .
         " WHERE id = :id";
 
         $stmt = $this->conn->prepare($query);
@@ -71,6 +72,7 @@ class PostgresFornecedorDao extends PostgresDao implements FornecedorDao {
         $stmt->bindValue(":telefone", $fornecedor->getTelefone());
         $stmt->bindValue(":email", $fornecedor->getEmail());
         $stmt->bindValue(":endereco_id", $endereco_id);
+        $stmt->bindValue(":usuario_id", $fornecedor->getUsuarioId());
         $stmt->bindValue(":id", $fornecedor->getId());
 
         if($stmt->execute()){
@@ -90,6 +92,7 @@ class PostgresFornecedorDao extends PostgresDao implements FornecedorDao {
                     f.descricao,
                     f.telefone,
                     f.email,
+                    f.usuario_id,
                     f.endereco_id,
 
                     e.rua AS endereco_rua,
@@ -113,7 +116,11 @@ class PostgresFornecedorDao extends PostgresDao implements FornecedorDao {
 
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if($row) {
-            $fornecedor = new Fornecedor($row['id'], $row['nome'], $row['descricao'], $row['telefone'], $row['email']);
+            $fornecedor = new Fornecedor($row['id'], $row['nome'], $row['descricao'], $row['telefone'], $row['email'], $row['usuario_id']);
+
+            if ($row['usuario_id']) {
+                $fornecedor->setUsuarioId($row['usuario_id']);
+            }
 
             if ($row['endereco_id']) {
                 $endereco = new Endereco(
@@ -134,6 +141,65 @@ class PostgresFornecedorDao extends PostgresDao implements FornecedorDao {
         return $fornecedor;
     }
 
+    public function buscaPorUsuarioId($usuarioId) {
+        $fornecedor = null;
+
+        $query = "SELECT
+                    f.id,
+                    f.nome,
+                    f.descricao,
+                    f.telefone,
+                    f.email,
+                    f.usuario_id,
+                    f.endereco_id,
+
+                    e.rua AS endereco_rua,
+                    e.numero AS endereco_numero,
+                    e.complemento AS endereco_complemento,
+                    e.bairro AS endereco_bairro,
+                    e.cep AS endereco_cep,
+                    e.cidade AS endereco_cidade,
+                    e.estado AS endereco_estado
+                FROM
+                    " . $this->table_name . " f
+                LEFT JOIN endereco e ON e.id = f.endereco_id
+                WHERE
+                    f.usuario_id = ?
+                LIMIT
+                    1 OFFSET 0";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(1, $usuarioId);
+        $stmt->execute();
+
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if($row) {
+            $fornecedor = new Fornecedor($row['id'], $row['nome'], $row['descricao'], $row['telefone'], $row['email'], $row['usuario_id']);
+
+            if ($row['usuario_id']) {
+                $fornecedor->setUsuarioId($row['usuario_id']);
+            }
+
+            if ($row['endereco_id']) {
+                $endereco = new Endereco(
+                    $row['endereco_id'], 
+                    $row['endereco_rua'], 
+                    $row['endereco_numero'], 
+                    $row['endereco_complemento'], 
+                    $row['endereco_bairro'], 
+                    $row['endereco_cep'], 
+                    $row['endereco_cidade'], 
+                    $row['endereco_estado']
+                );
+
+                $fornecedor->setEndereco($endereco);
+            }
+        }
+
+        return $fornecedor;
+    }
+
     public function buscaTodos($limit = null, $offset = null) {
 
         $fornecedores = array();
@@ -144,6 +210,7 @@ class PostgresFornecedorDao extends PostgresDao implements FornecedorDao {
                     f.descricao,
                     f.telefone,
                     f.email,
+                    f.usuario_id,
                     f.endereco_id,
 
                     e.rua AS endereco_rua,
@@ -172,7 +239,11 @@ class PostgresFornecedorDao extends PostgresDao implements FornecedorDao {
         $stmt->execute();
 
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-            $fornecedor = new Fornecedor($row['id'], $row['nome'], $row['descricao'], $row['telefone'], $row['email']);
+            $fornecedor = new Fornecedor($row['id'], $row['nome'], $row['descricao'], $row['telefone'], $row['email'], $row['usuario_id']);
+
+            if ($row['usuario_id']) {
+                $fornecedor->setUsuarioId($row['usuario_id']);
+            }
 
             if ($row['endereco_id']) {
                 $endereco = new Endereco(
@@ -204,6 +275,7 @@ class PostgresFornecedorDao extends PostgresDao implements FornecedorDao {
                     f.descricao,
                     f.telefone,
                     f.email,
+                    f.usuario_id,
                     f.endereco_id,
 
                     e.rua AS endereco_rua,
@@ -229,8 +301,13 @@ class PostgresFornecedorDao extends PostgresDao implements FornecedorDao {
                 $row['nome'],
                 $row['descricao'],
                 $row['telefone'],
-                $row['email']
+                $row['email'],
+                $row['usuario_id']
             );
+
+            if ($row['usuario_id']) {
+                $fornecedor->setUsuarioId($row['usuario_id']);
+            }
 
             if ($row['endereco_id']) {
                 $endereco = new Endereco(

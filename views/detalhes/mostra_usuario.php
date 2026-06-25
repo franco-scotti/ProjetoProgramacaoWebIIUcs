@@ -21,6 +21,7 @@ echo "<section>";
 echo "<h1> Login : " . $usuario->getLogin() . "</h1>";
 echo "<p> Id : " . $usuario->getId() . "</p>";
 echo "<p> Nome : " . $usuario->getNome() . "</p>";
+echo "<p> Admin : " . ($usuario->isAdmin() ? 'Sim' : 'Não') . "</p>";
 echo "<a href='" . BASE_URL . "/views/listagem/lista_usuarios.php' class='btn btn-primary left-margin'>";
 echo "Voltar";
 echo "</a>";

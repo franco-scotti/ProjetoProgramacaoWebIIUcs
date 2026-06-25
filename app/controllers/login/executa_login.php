@@ -25,8 +25,28 @@ $problemas = FALSE;
 if($usuario) {
     if(!strcmp($senha, $usuario->getSenha())) 
     { 
-        $_SESSION["id_usuario"]= $usuario->getId(); 
+        $_SESSION["id_usuario"] = $usuario->getId(); 
         $_SESSION["nome_usuario"] = stripslashes($usuario->getNome()); 
+        $_SESSION["usuario_cliente_id"] = null;
+        $_SESSION["usuario_fornecedor_id"] = null;
+        $_SESSION["usuario_tipo"] = 'usuario';
+
+        if ($usuario->isAdmin()) {
+            $_SESSION["usuario_tipo"] = 'admin';
+        } else {
+            $cliente = $factory->getClienteDao()->buscaPorUsuarioId($usuario->getId());
+            if ($cliente) {
+                $_SESSION["usuario_tipo"] = 'cliente';
+                $_SESSION["usuario_cliente_id"] = $cliente->getId();
+            } else {
+                $fornecedor = $factory->getFornecedorDao()->buscaPorUsuarioId($usuario->getId());
+                if ($fornecedor) {
+                    $_SESSION["usuario_tipo"] = 'fornecedor';
+                    $_SESSION["usuario_fornecedor_id"] = $fornecedor->getId();
+                }
+            }
+        }
+
         header("Location: " . BASE_URL . "/public/index.php"); 
         exit; 
     } else {

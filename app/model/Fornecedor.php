@@ -6,40 +6,45 @@ class Fornecedor {
     private $descricao;
     private $telefone;
     private $email;
+    private $usuarioId;
     private $endereco;
     private $produtos;
 
-    public function __construct( $id, $nome, $descricao, $telefone, $email)
+    public function __construct($id, $nome, $descricao, $telefone, $email, $usuarioId = null)
     {
-        $this->id=$id;
-        $this->nome=$nome;
-        $this->descricao=$descricao;
-        $this->telefone=$telefone;
-        $this->email=$email;
-        $this->endereco=null;
-        $this->produtos=array();
+        $this->id = $id;
+        $this->nome = $nome;
+        $this->descricao = $descricao;
+        $this->telefone = $telefone;
+        $this->email = $email;
+        $this->usuarioId = $usuarioId;
+        $this->endereco = null;
+        $this->produtos = array();
     }
 
     public function getId() { return $this->id; }
-    public function setId($id) {$this->id = $id;}
+    public function setId($id) { $this->id = $id; }
 
     public function getNome() { return $this->nome; }
-    public function setNome($nome) {$this->nome = $nome;}
+    public function setNome($nome) { $this->nome = $nome; }
 
     public function getDescricao() { return $this->descricao; }
-    public function setDescricao($descricao) {$this->descricao = $descricao;}
+    public function setDescricao($descricao) { $this->descricao = $descricao; }
 
     public function getTelefone() { return $this->telefone; }
-    public function setTelefone($telefone) {$this->telefone = $telefone;}
+    public function setTelefone($telefone) { $this->telefone = $telefone; }
 
     public function getEmail() { return $this->email; }
-    public function setEmail($email) {$this->email = $email;}
+    public function setEmail($email) { $this->email = $email; }
+
+    public function getUsuarioId() { return $this->usuarioId; }
+    public function setUsuarioId($usuarioId) { $this->usuarioId = $usuarioId; }
 
     public function getEndereco() { return $this->endereco; }
-    public function setEndereco($endereco) {$this->endereco = $endereco;}
+    public function setEndereco($endereco) { $this->endereco = $endereco; }
 
     public function getProdutos() { return $this->produtos; }
-    public function setProdutos($produtos) {$this->produtos = $produtos;}
-    public function addProduto($produto) {$this->produtos[] = $produto;}
+    public function setProdutos($produtos) { $this->produtos = $produtos; }
+    public function addProduto($produto) { $this->produtos[] = $produto; }
 }
 ?>
