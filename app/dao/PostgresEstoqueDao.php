@@ -174,6 +174,34 @@ class PostgresEstoqueDao extends PostgresDao implements EstoqueDao {
         return $estoques;
     }
 
+    public function buscaPorFornecedorId($fornecedorId) {
+        $estoques = array();
+
+        $query = "SELECT
+                    e.id,
+                    e.produto_id,
+                    e.quantidade,
+                    e.preco,
+                    p.nome AS produto_nome,
+                    p.descricao AS produto_descricao
+                  FROM estoque e
+                  INNER JOIN produto p ON p.id = e.produto_id
+                  WHERE p.fornecedor_id = :fornecedor_id
+                  ORDER BY e.id ASC";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':fornecedor_id', (int)$fornecedorId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $estoque = new Estoque($row['id'], $row['quantidade'], $row['preco']);
+            $estoque->setProduto(new Produto($row['produto_id'], $row['produto_nome'], $row['produto_descricao'], null));
+            $estoques[] = $estoque;
+        }
+
+        return $estoques;
+    }
+
     public function contaTodos() {
 
         $query = "SELECT COUNT(*) as total FROM " . $this->table_name;

@@ -177,5 +177,82 @@ class PostgresProdutoDao extends PostgresDao implements ProdutoDao {
 
         return (int)$stmt->fetchColumn();
     }
+
+    // --- helpers internos ---
+
+    private function baseSelect() {
+        return "SELECT
+                    p.id,
+                    p.nome,
+                    p.descricao,
+                    p.foto,
+                    p.fornecedor_id,
+                    f.nome        AS fornecedor_nome,
+                    f.descricao   AS fornecedor_descricao,
+                    f.telefone    AS fornecedor_telefone,
+                    f.email       AS fornecedor_email
+                FROM produto p
+                LEFT JOIN fornecedor f ON f.id = p.fornecedor_id";
+    }
+
+    private function rowToProduto($row) {
+        $produto = new Produto($row['id'], $row['nome'], $row['descricao'], $row['foto']);
+        if ($row['fornecedor_id']) {
+            $produto->setFornecedor(new Fornecedor(
+                $row['fornecedor_id'],
+                $row['fornecedor_nome'],
+                $row['fornecedor_descricao'],
+                $row['fornecedor_telefone'],
+                $row['fornecedor_email']
+            ));
+        }
+        return $produto;
+    }
+
+    private function fetchProdutos($stmt) {
+        $produtos = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $produtos[] = $this->rowToProduto($row);
+        }
+        return $produtos;
+    }
+
+    // --- filtro por fornecedor ---
+
+    public function buscaPorFornecedorId($fornecedorId, $limit = null, $offset = null) {
+        $query = $this->baseSelect() .
+                 " WHERE p.fornecedor_id = :fornecedor_id ORDER BY p.id ASC";
+
+        if ($limit !== null && $offset !== null) {
+            $query .= " LIMIT " . (int)$limit . " OFFSET " . (int)$offset;
+        }
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':fornecedor_id', (int)$fornecedorId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $this->fetchProdutos($stmt);
+    }
+
+    public function buscaPorCodigoNomeFornecedor($termo, $fornecedorId) {
+        $query = $this->baseSelect() .
+                 " WHERE p.fornecedor_id = :fornecedor_id
+                     AND (CAST(p.id AS TEXT) ILIKE :termo OR p.nome ILIKE :termo)
+                 ORDER BY p.id ASC";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':fornecedor_id', (int)$fornecedorId, PDO::PARAM_INT);
+        $stmt->bindValue(':termo', '%' . $termo . '%');
+        $stmt->execute();
+        return $this->fetchProdutos($stmt);
+    }
+
+    public function contaPorFornecedor($fornecedorId) {
+        $query = "SELECT COUNT(*) AS total FROM " . $this->table_name .
+                 " WHERE fornecedor_id = :fornecedor_id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':fornecedor_id', (int)$fornecedorId, PDO::PARAM_INT);
+        $stmt->execute();
+        return (int)$stmt->fetchColumn();
+    }
 }
 ?>

@@ -87,7 +87,7 @@ class PostgresUsuarioDao extends PostgresDao implements UsuarioDao {
      
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if($row) {
-            $usuario = new Usuario($row['id'],$row['login'], $row['senha'], $row['nome']);
+            $usuario = new Usuario($row['id'],$row['login'], $row['senha'], $row['nome'], $row['admin']);
         } 
      
         return $usuario;
@@ -112,7 +112,7 @@ class PostgresUsuarioDao extends PostgresDao implements UsuarioDao {
      
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if($row) {
-            $usuario = new Usuario($row['id'],$row['login'], $row['senha'], $row['nome']);
+            $usuario = new Usuario($row['id'],$row['login'], $row['senha'], $row['nome'], $row['admin']);
         } 
      
         return $usuario;

@@ -8,6 +8,9 @@ interface ProdutoDao {
     public function buscaPorId($id);
     public function buscaTodos($limit = null, $offset = null);
     public function buscaPorCodigoNome($termo);
+    public function buscaPorFornecedorId($fornecedorId, $limit = null, $offset = null);
+    public function buscaPorCodigoNomeFornecedor($termo, $fornecedorId);
     public function contaTodos();
+    public function contaPorFornecedor($fornecedorId);
 }
 ?>

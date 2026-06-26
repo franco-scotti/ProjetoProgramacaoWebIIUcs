@@ -167,6 +167,57 @@ class PostgresPedidoDao extends PostgresDao implements PedidoDao {
         return $pedidos;
     }
 
+    public function buscaPorFornecedorId($fornecedorId) {
+        $pedidos = array();
+
+        $query = "SELECT DISTINCT
+                    p.id,
+                    p.numero,
+                    p.data_pedido,
+                    p.data_entrega,
+                    p.situacao,
+                    p.cliente_id,
+                    c.nome AS cliente_nome,
+                    c.telefone AS cliente_telefone,
+                    c.email AS cliente_email,
+                    c.cartao_credito AS cliente_cartao_credito
+                  FROM pedido p
+                  LEFT JOIN cliente c ON c.id = p.cliente_id
+                  INNER JOIN item_pedido ip ON ip.pedido_id = p.id
+                  INNER JOIN produto pr ON pr.id = ip.produto_id
+                  WHERE pr.fornecedor_id = :fornecedor_id
+                  ORDER BY p.id ASC";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':fornecedor_id', (int)$fornecedorId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $pedido = new Pedido(
+                $row['id'],
+                $row['numero'],
+                $row['data_pedido'],
+                $row['data_entrega'],
+                $row['situacao']
+            );
+
+            if ($row['cliente_id']) {
+                $cliente = new Cliente(
+                    $row['cliente_id'],
+                    $row['cliente_nome'],
+                    $row['cliente_telefone'],
+                    $row['cliente_email'],
+                    $row['cliente_cartao_credito']
+                );
+                $pedido->setCliente($cliente);
+            }
+
+            $pedidos[] = $pedido;
+        }
+
+        return $pedidos;
+    }
+
     public function contaTodos() {
         $query = "SELECT COUNT(*) as total FROM " . $this->table_name;
 

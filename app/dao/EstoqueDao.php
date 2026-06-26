@@ -8,6 +8,7 @@ interface EstoqueDao {
     public function buscaPorId($id);
     public function buscaTodos($limit = null, $offset = null);
     public function buscaPorCodigoNome($termo);
+    public function buscaPorFornecedorId($fornecedorId);
     public function contaTodos();
 }
 ?>
