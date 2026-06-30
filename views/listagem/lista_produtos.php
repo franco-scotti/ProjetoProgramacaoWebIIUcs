@@ -33,7 +33,6 @@ function escreveLinhasProdutos($produtos, $isFornecedor) {
             $fornecedorNome= $produto->getFornecedor() ? htmlspecialchars($produto->getFornecedor()->getNome()) : '—';
 
             echo "<tr>";
-            echo "<td>{$id}</td>";
             echo "<td>{$nome}</td>";
             echo "<td>{$descricao}</td>";
             echo "<td>{$fornecedorNome}</td>";
@@ -95,7 +94,7 @@ $produtos = $filtraFornecedor
     : $dao->buscaTodos($itensPorPagina, $offset);
 
 echo "<table class='table table-hover table-responsive table-bordered'>";
-echo "<thead><tr><th>Id</th><th>Nome</th><th>Descrição</th><th>Fornecedor</th><th>Ações</th></tr></thead>";
+echo "<thead><tr><th>Nome</th><th>Descrição</th><th>Fornecedor</th><th>Ações</th></tr></thead>";
 echo "<tbody id='resultadoProdutos'>";
 escreveLinhasProdutos($produtos, $isFornecedor);
 echo "</tbody>";

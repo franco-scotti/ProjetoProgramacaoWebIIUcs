@@ -10,6 +10,12 @@ if (is_session_started() === FALSE) {
     session_start();
 }
 
+$usuarioTipo = $_SESSION['usuario_tipo'] ?? null;
+if ($usuarioTipo === 'cliente') {
+    header('Location: ' . BASE_URL . '/public/catalogo.php');
+    exit;
+}
+
 function productImageSrc($foto) {
     if (!$foto) {
         return '';
@@ -19,6 +25,9 @@ function productImageSrc($foto) {
     }
     if (strpos($foto, 'data:image') === 0) {
         return $foto;
+    }
+    if (preg_match('/^[A-Za-z0-9+\/]+=*$/', $foto) && base64_decode($foto, true) !== false) {
+        return 'data:image/jpeg;base64,' . $foto;
     }
     return 'data:image/jpeg;base64,' . base64_encode($foto);
 }
@@ -102,7 +111,7 @@ include_once dirname(__DIR__) . "/views/layout/layout_header.php";
                     <span class="feature-badge">Catalogo</span>
                     <h4>Nenhum produto em destaque ainda</h4>
                     <p>Cadastre produtos para transformar esta home em uma vitrine operacional.</p>
-                    <a href="<?= BASE_URL ?>/views/cadastro/novo_produto.php">Cadastrar primeiro produto</a>
+                    <a href="<?= BASE_URL ?>/views/cadastro/form_produto.php">Cadastrar primeiro produto</a>
                 </div>
             <?php } ?>
         </div>
@@ -113,21 +122,13 @@ include_once dirname(__DIR__) . "/views/layout/layout_header.php";
             <span class="eyebrow">Operacao</span>
             <h3>Acessos rapidos</h3>
         </div>
-        <a href="<?= BASE_URL ?>/views/cadastro/novo_produto.php" class="quick-link">
+        <a href="<?= BASE_URL ?>/views/cadastro/form_produto.php" class="quick-link">
             <strong>Novo produto</strong>
             <span>Adicione itens ao catalogo com rapidez.</span>
-        </a>
-        <a href="<?= BASE_URL ?>/views/listagem/lista_clientes.php" class="quick-link">
-            <strong>Base de clientes</strong>
-            <span>Visualize quem compra e mantenha os dados organizados.</span>
         </a>
         <a href="<?= BASE_URL ?>/views/listagem/lista_estoques.php" class="quick-link">
             <strong>Controle de estoque</strong>
             <span>Acompanhe disponibilidade e precificacao.</span>
-        </a>
-        <a href="<?= BASE_URL ?>/views/listagem/lista_fornecedores.php" class="quick-link">
-            <strong>Rede de fornecedores</strong>
-            <span>Mantenha origem dos produtos e contatos em dia.</span>
         </a>
     </aside>
 </section>
@@ -140,7 +141,6 @@ include_once dirname(__DIR__) . "/views/layout/layout_header.php";
     <div class="banner-links">
         <a href="<?= BASE_URL ?>/public/catalogo.php">Catálogo completo</a>
         <a href="<?= BASE_URL ?>/views/listagem/lista_pedidos.php">Status dos pedidos</a>
-        <a href="<?= BASE_URL ?>/views/listagem/lista_clientes.php">Relacionamento</a>
     </div>
 </section>
 <?php } else { ?>

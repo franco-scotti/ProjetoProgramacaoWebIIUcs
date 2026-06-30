@@ -20,7 +20,6 @@ function escreveLinhasFornecedores($fornecedores) {
     if ($fornecedores) {
         foreach ($fornecedores as $fornecedor) {
             echo "<tr>";
-            echo "<td>{$fornecedor->getId()}</td>";
             echo "<td>" . htmlspecialchars($fornecedor->getNome()) . "</td>";
             echo "<td>" . htmlspecialchars($fornecedor->getDescricao()) . "</td>";
             echo "<td>" . htmlspecialchars($fornecedor->getTelefone()) . "</td>";
@@ -62,7 +61,7 @@ $fornecedores = $dao->buscaTodos($itensPorPagina, $offset);
 echo "<input type='text' id='pesquisaFornecedor' class='form-control' placeholder='Buscar por código ou nome'>";
 echo "<br>";
 echo "<table class='table table-hover table-responsive table-bordered'>";
-echo "<tr><th>Id</th><th>Nome</th><th>Descrição</th><th>Telefone</th><th>Email</th><th>Ações</th></tr>";
+echo "<tr><th>Nome</th><th>Descrição</th><th>Telefone</th><th>Email</th><th>Ações</th></tr>";
 echo "<tbody id='resultadoFornecedores'>";
 escreveLinhasFornecedores($fornecedores);
 echo "</tbody>";

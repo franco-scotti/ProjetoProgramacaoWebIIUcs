@@ -11,7 +11,6 @@ function escreveLinhasUsuarios($usuarios) {
     if($usuarios) {
         foreach ($usuarios as $usuario) {
             echo "<tr>";
-            echo "<td>{$usuario->getId()}</td>";
             echo "<td>{$usuario->getLogin()}</td>";
             echo "<td>{$usuario->getNome()}</td>";
             echo "<td>" . ($usuario->isAdmin() ? 'Sim' : 'Não') . "</td>";
@@ -20,7 +19,7 @@ function escreveLinhasUsuarios($usuarios) {
             echo "<span class='glyphicon glyphicon-list'></span> Mostra";
             echo "</a>";
 
-            echo "<a href='" . BASE_URL . "/views/altera/modifica_usuario.php?id={$usuario->getId()}' class='btn btn-info left-margin'>";
+            echo "<a href='" . BASE_URL . "/views/cadastro/form_usuario.php?id={$usuario->getId()}' class='btn btn-info left-margin'>";
             echo "<span class='glyphicon glyphicon-edit'></span> Altera";
             echo "</a>";
 
@@ -77,7 +76,6 @@ echo "<br>";
 
 echo "<table class='table table-hover table-responsive table-bordered'>";
     echo "<tr>";
-        echo "<th>Id</th>";
         echo "<th>Login</th>";
         echo "<th>Nome</th>";
         echo "<th>Admin</th>";
@@ -111,7 +109,7 @@ if ($totalPaginas > 1) {
 
 echo "</div>";
 
-echo "<a href='" . BASE_URL . "/views/cadastro/novo_usuario.php' class='btn btn-primary left-margin'>";
+echo "<a href='" . BASE_URL . "/views/cadastro/form_usuario.php' class='btn btn-primary left-margin'>";
 echo "Novo";
 echo "</a>";
 

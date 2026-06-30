@@ -144,7 +144,7 @@ try {
     // Cria o pedido
     $numero      = time();
     $data_pedido = date('Y-m-d');
-    $situacao    = 'NOVO';
+    $situacao    = 'PREPARANDO PARA ENVIO';
 
     $stmt = $pdo->prepare(
         "INSERT INTO pedido (numero, data_pedido, data_entrega, situacao, cliente_id)

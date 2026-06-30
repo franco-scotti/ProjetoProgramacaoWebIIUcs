@@ -7,9 +7,18 @@ if (!defined('BASE_URL')) {
 include_once dirname(__DIR__) . "/routes/fachada.php";
 
 function productImageSrc($foto) {
-    if (!$foto) return '';
-    if (is_resource($foto)) $foto = stream_get_contents($foto);
-    if (strpos($foto, 'data:image') === 0) return $foto;
+    if (!$foto) {
+        return '';
+    }
+    if (is_resource($foto)) {
+        $foto = stream_get_contents($foto);
+    }
+    if (strpos($foto, 'data:image') === 0) {
+        return $foto;
+    }
+    if (preg_match('/^[A-Za-z0-9+\/]+=*$/', $foto) && base64_decode($foto, true) !== false) {
+        return 'data:image/jpeg;base64,' . $foto;
+    }
     return 'data:image/jpeg;base64,' . base64_encode($foto);
 }
 

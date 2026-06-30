@@ -8,6 +8,7 @@ interface PedidoDao {
     public function buscaPorId($id);
     public function buscaTodos($offset = null, $limit = null);
     public function buscaPorFornecedorId($fornecedorId);
+    public function buscaPorNumeroOuCliente($termo);
     public function contaTodos();
     
 }

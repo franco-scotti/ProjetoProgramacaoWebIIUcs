@@ -30,12 +30,12 @@ $isCliente    = $tipoUsuario === 'cliente';
 
 // --- Menu principal (esquerda) ---
 $menuPrincipal = [
-    '/ProjetoProgramacaoWebIIUcs/public/index.php'    => 'Home',
     '/ProjetoProgramacaoWebIIUcs/public/catalogo.php' => 'Catálogo',
 ];
 
 if ($isAdmin ) {
     // Admin e fornecedor veem a gestão completa
+    $menuPrincipal['/ProjetoProgramacaoWebIIUcs/public/index.php']                      = 'Home';
     $menuPrincipal['/ProjetoProgramacaoWebIIUcs/views/listagem/lista_produtos.php']    = 'Produtos';
     $menuPrincipal['/ProjetoProgramacaoWebIIUcs/views/listagem/lista_pedidos.php']     = 'Pedidos';
     $menuPrincipal['/ProjetoProgramacaoWebIIUcs/views/listagem/lista_clientes.php']    = 'Clientes';

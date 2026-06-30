@@ -12,7 +12,6 @@
                     <a href="<?php echo BASE_URL; ?>/public/catalogo.php">Catálogo</a>
                     <?php if (isset($_SESSION["nome_usuario"])) { ?>
                         <a href="<?php echo BASE_URL; ?>/views/listagem/lista_pedidos.php">Pedidos</a>
-                        <a href="<?php echo BASE_URL; ?>/views/listagem/lista_clientes.php">Clientes</a>
                     <?php } ?>
                 </p>
             </div>

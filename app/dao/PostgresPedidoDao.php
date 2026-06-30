@@ -218,6 +218,53 @@ class PostgresPedidoDao extends PostgresDao implements PedidoDao {
         return $pedidos;
     }
 
+    public function buscaPorNumeroOuCliente($termo) {
+        $pedidos = array();
+
+        $query = "SELECT
+                    p.id,
+                    p.numero,
+                    p.data_pedido,
+                    p.data_entrega,
+                    p.situacao,
+                    p.cliente_id,
+                    c.nome AS cliente_nome,
+                    c.telefone AS cliente_telefone,
+                    c.email AS cliente_email,
+                    c.cartao_credito AS cliente_cartao_credito
+                  FROM pedido p
+                  LEFT JOIN cliente c ON c.id = p.cliente_id
+                  WHERE CAST(p.numero AS TEXT) ILIKE :termo
+                     OR c.nome ILIKE :termo
+                  ORDER BY p.id DESC";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindValue(':termo', '%' . $termo . '%');
+        $stmt->execute();
+
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $pedido = new Pedido(
+                $row['id'],
+                $row['numero'],
+                $row['data_pedido'],
+                $row['data_entrega'],
+                $row['situacao']
+            );
+            if ($row['cliente_id']) {
+                $pedido->setCliente(new Cliente(
+                    $row['cliente_id'],
+                    $row['cliente_nome'],
+                    $row['cliente_telefone'],
+                    $row['cliente_email'],
+                    $row['cliente_cartao_credito']
+                ));
+            }
+            $pedidos[] = $pedido;
+        }
+
+        return $pedidos;
+    }
+
     public function contaTodos() {
         $query = "SELECT COUNT(*) as total FROM " . $this->table_name;
 

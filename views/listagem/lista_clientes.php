@@ -21,11 +21,10 @@ $clientes = $dao->buscaTodos();
 
 if($clientes) {
     echo "<table class='table table-hover table-responsive table-bordered'>";
-    echo "<tr><th>Id</th><th>Nome</th><th>Telefone</th><th>Email</th><th>Cartao</th><th>Acoes</th></tr>";
+    echo "<tr><th>Nome</th><th>Telefone</th><th>Email</th><th>Cartao</th><th>Acoes</th></tr>";
 
     foreach ($clientes as $cliente) {
         echo "<tr>";
-        echo "<td>{$cliente->getId()}</td>";
         echo "<td>{$cliente->getNome()}</td>";
         echo "<td>{$cliente->getTelefone()}</td>";
         echo "<td>{$cliente->getEmail()}</td>";

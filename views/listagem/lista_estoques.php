@@ -27,13 +27,12 @@ function escreveLinhasEstoques($estoques, $isFornecedor) {
         foreach ($estoques as $estoque) {
             $nomeProd = $estoque->getProduto() ? htmlspecialchars($estoque->getProduto()->getNome()) : '—';
             echo "<tr>";
-            echo "<td>{$estoque->getId()}</td>";
             echo "<td>{$nomeProd}</td>";
             echo "<td>{$estoque->getQuantidade()}</td>";
             echo "<td>{$estoque->getPreco()}</td>";
             echo "<td>";
             echo "<a href='" . BASE_URL . "/views/detalhes/mostra_estoque.php?id={$estoque->getId()}' class='btn btn-primary left-margin'><span class='glyphicon glyphicon-list'></span> Mostra</a>";
-            echo "<a href='" . BASE_URL . "/views/altera/modifica_estoque.php?id={$estoque->getId()}' class='btn btn-info left-margin'><span class='glyphicon glyphicon-edit'></span> Altera</a>";
+            echo "<a href='" . BASE_URL . "/views/cadastro/form_estoque.php?id={$estoque->getId()}' class='btn btn-info left-margin'><span class='glyphicon glyphicon-edit'></span> Altera</a>";
             if (!$isFornecedor) {
                 echo "<a href='" . BASE_URL . "/app/controllers/remove/remove_estoque.php?id={$estoque->getId()}' class='btn btn-danger left-margin' onclick=\"return confirm('Tem certeza que quer excluir?')\"><span class='glyphicon glyphicon-remove'></span> Exclui</a>";
             }
@@ -92,7 +91,7 @@ if ($filtraFornecedor) {
 }
 
 echo "<table class='table table-hover table-responsive table-bordered'>";
-echo "<tr><th>Id</th><th>Produto</th><th>Quantidade</th><th>Preço</th><th>Ações</th></tr>";
+echo "<tr><th>Produto</th><th>Quantidade</th><th>Preço</th><th>Ações</th></tr>";
 echo "<tbody id='resultadoEstoques'>";
 escreveLinhasEstoques($estoques, $isFornecedor);
 echo "</tbody>";
@@ -116,8 +115,8 @@ if (!$filtraFornecedor) {
 }
 echo "</div>";
 
-if (!$isFornecedor) {
-    echo "<a href='" . BASE_URL . "/views/cadastro/novo_estoque.php' class='btn btn-primary left-margin'>Novo</a>";
+if ($isFornecedor) {
+    echo "<a href='" . BASE_URL . "/views/cadastro/form_estoque.php' class='btn btn-primary left-margin'>Novo</a>";
 }
 
 echo "</section>";

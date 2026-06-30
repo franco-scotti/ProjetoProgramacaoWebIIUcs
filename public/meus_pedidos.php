@@ -33,7 +33,6 @@ include_once dirname(__DIR__) . "/views/layout/layout_header.php";
 <section>
     <div class="section-heading">
         <h2>Meus Pedidos</h2>
-        <p>Aqui estão os pedidos registrados para o seu cliente.</p>
     </div>
 
     <?php if ($pedidos) { ?>
@@ -43,7 +42,6 @@ include_once dirname(__DIR__) . "/views/layout/layout_header.php";
                     <th>Pedido</th>
                     <th>Data</th>
                     <th>Status</th>
-                    <th>Cliente</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -53,7 +51,6 @@ include_once dirname(__DIR__) . "/views/layout/layout_header.php";
                         <td><?php echo htmlspecialchars($pedido['numero']); ?></td>
                         <td><?php echo htmlspecialchars($pedido['data_pedido']); ?></td>
                         <td><?php echo htmlspecialchars($pedido['situacao']); ?></td>
-                        <td><?php echo htmlspecialchars($pedido['cliente_nome'] ?? 'Cliente'); ?></td>
                         <td>
                             <a href="<?php echo BASE_URL; ?>/public/pedido_detalhe.php?id=<?php echo (int)$pedido['id']; ?>" class="btn btn-default btn-sm">Detalhes</a>
                         </td>

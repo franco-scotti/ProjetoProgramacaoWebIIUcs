@@ -99,7 +99,7 @@ create table pedido (
         foreign key (cliente_id) references cliente(id)
         on update cascade on delete restrict,
     constraint ck_pedido_situacao
-        check (upper(situacao) in ('NOVO', 'ENTREGUE', 'CANCELADO'))
+        check (upper(situacao) in ('NOVO', 'PREPARANDO PARA ENVIO', 'A CAMINHO', 'ENTREGUE', 'CANCELADO'))
 );
 
 create table item_pedido (
