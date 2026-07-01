@@ -19,7 +19,6 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-// Responde OPTIONS (preflight)
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(204);
     exit;
@@ -35,7 +34,6 @@ include_once dirname(__DIR__) . "/routes/fachada.php";
 
 $pdo = $factory->getConnection();
 
-// ── Helper: monta array de pedido a partir de uma linha do banco ───────────
 function rowToPedido(array $row): array {
     return [
         'id'           => (int)$row['id'],
@@ -51,7 +49,6 @@ function rowToPedido(array $row): array {
     ];
 }
 
-// ── Helper: busca itens de um pedido ──────────────────────────────────────
 function itensDoPedido(PDO $pdo, int $pedidoId): array {
     $stmt = $pdo->prepare(
         "SELECT ip.quantidade, ip.preco,
@@ -80,16 +77,13 @@ function itensDoPedido(PDO $pdo, int $pedidoId): array {
     return ['itens' => $itens, 'total' => $total];
 }
 
-// ── BASE da query ──────────────────────────────────────────────────────────
 $baseSelect = "SELECT
     p.id, p.numero, p.data_pedido, p.data_entrega, p.situacao, p.cliente_id,
     c.nome AS cliente_nome, c.email AS cliente_email
   FROM pedido p
   LEFT JOIN cliente c ON c.id = p.cliente_id";
 
-// ── Roteamento por parâmetros ──────────────────────────────────────────────
 
-// ?id=N — detalhe de um pedido com itens
 if (isset($_GET['id'])) {
     $id = (int)$_GET['id'];
     $stmt = $pdo->prepare($baseSelect . " WHERE p.id = :id LIMIT 1");
@@ -109,7 +103,6 @@ if (isset($_GET['id'])) {
     exit;
 }
 
-// ?numero=N — busca por número do pedido
 if (isset($_GET['numero'])) {
     $stmt = $pdo->prepare($baseSelect . " WHERE CAST(p.numero AS TEXT) ILIKE :n ORDER BY p.id DESC");
     $stmt->bindValue(':n', '%' . $_GET['numero'] . '%');
@@ -119,7 +112,6 @@ if (isset($_GET['numero'])) {
     exit;
 }
 
-// ?cliente=Nome — busca por nome do cliente
 if (isset($_GET['cliente'])) {
     $stmt = $pdo->prepare($baseSelect . " WHERE c.nome ILIKE :n ORDER BY p.id DESC");
     $stmt->bindValue(':n', '%' . $_GET['cliente'] . '%');
@@ -129,7 +121,6 @@ if (isset($_GET['cliente'])) {
     exit;
 }
 
-// Sem filtro — lista todos (com paginação opcional ?pagina=N&limit=N)
 $limit  = max(1, min(100, (int)($_GET['limit']  ?? 20)));
 $pagina = max(1, (int)($_GET['pagina'] ?? 1));
 $offset = ($pagina - 1) * $limit;

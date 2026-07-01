@@ -25,6 +25,9 @@
 html, body { margin: 0; min-height: 100%; }
 
 body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   color: var(--text);
   font-family: "Plus Jakarta Sans", sans-serif;
   font-size: 16px;
@@ -613,6 +616,7 @@ legend {
 
 /* ── Footer ─────────────────────────────────────────────── */
 .store-footer {
+  margin-top: auto;
   padding: 0 clamp(16px, 4vw, 44px) 32px;
 }
 
@@ -670,4 +674,171 @@ legend {
 
   .commerce-nav { padding: 0; }
   .session-chip span { font-size: 13px; }
+}
+
+
+/* ============================================================
+   OVERRIDES — largura total, bordas quadradas, sans-serif
+   ============================================================ */
+
+/* ── 1. Raios mínimos em todos os componentes ─────────────── */
+:root {
+  --r-xl:   4px;
+  --r-lg:   4px;
+  --r-md:   4px;
+  --r-pill: 4px;
+}
+
+/* Elementos individuais que hardcodam border-radius */
+.brand-row,
+.brand-mark,
+.page-shell > section,
+.stat-card,
+.feature-card,
+.quick-link,
+.highlight-card,
+.footer-grid,
+.alert,
+.dropdown-menu,
+.table,
+.inner-page table,
+.product-card,
+.product-detail .product-media,
+.empty-state,
+.badge-esgotado,
+.nav-link,
+.session-chip,
+.session-link,
+.btn, .page-shell .btn,
+.btn-secondary,
+.label, .badge,
+.pagination > li:first-child > a,
+.pagination > li:first-child > span,
+.pagination > li:last-child > a,
+.pagination > li:last-child > span {
+  border-radius: 4px !important;
+}
+
+/* Inputs e selects */
+.page-shell form .form-control,
+.page-shell input[type="text"],
+.page-shell input[type="password"],
+.page-shell input[type="date"],
+.page-shell select,
+.page-shell textarea,
+.search-input,
+.qty-input {
+  border-radius: 4px !important;
+}
+
+/* ── 2. Header largura total ────────────────────────────────── */
+.store-header {
+  padding: 0 !important;
+  background: #211812;
+  border-bottom: 2px solid rgba(184,85,40,.35);
+  box-shadow: 0 2px 16px rgba(55,33,14,.18);
+}
+
+.brand-row {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 14px clamp(16px, 4vw, 44px) !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: #211812 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Textos do header sobre fundo escuro */
+.brand-name    { color: #f8efe6 !important; font-family: "Lato", sans-serif !important; }
+.brand-subtitle { color: rgba(248,239,230,.6) !important; }
+.brand-kicker  { color: rgba(248,239,230,.5) !important; }
+.brand-mark    { background: rgba(255,255,255,.08) !important; box-shadow: none !important; }
+
+.header-tools .search-input {
+  background: rgba(255,255,255,.1) !important;
+  border-color: rgba(255,255,255,.18) !important;
+  color: #f8efe6 !important;
+}
+.header-tools .search-input::placeholder { color: rgba(248,239,230,.5); }
+
+.cart-link    { color: var(--brand-soft) !important; }
+.cart-count   { background: var(--brand) !important; color: #fff !important; }
+.session-chip {
+  background: transparent !important;
+  padding: 0 !important;
+  color: rgba(248,239,230,.75) !important;
+}
+.session-chip span { color: rgba(248,239,230,.75); }
+
+/* Nav — barra abaixo do brand, fundo ligeiramente mais claro */
+.commerce-nav {
+  width: 100%;
+  margin: 0 !important;
+  padding: 8px clamp(16px, 4vw, 44px) !important;
+  background: #2e1f15;
+  border-top: 1px solid rgba(184,85,40,.2);
+}
+
+.nav-link {
+  border: none !important;
+  background: transparent !important;
+  color: rgba(248,239,230,.75) !important;
+  border-radius: 4px !important;
+}
+.nav-link:hover,
+.nav-link:focus {
+  background: rgba(184,85,40,.25) !important;
+  color: #f8efe6 !important;
+  transform: none !important;
+}
+.nav-link.is-active {
+  background: var(--brand) !important;
+  color: #fff8f0 !important;
+  box-shadow: none !important;
+}
+.nav-link-secondary.is-active {
+  background: rgba(30,102,89,.4) !important;
+  color: #c6ede5 !important;
+}
+
+/* ── 3. Footer largura total ─────────────────────────────────── */
+.store-footer {
+  padding: 0 !important;
+}
+
+.footer-grid {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  padding: 28px clamp(16px, 4vw, 44px) !important;
+}
+
+/* ── 4. Fontes sans-serif em todos os títulos ────────────────── */
+body,
+h1, h2, h3, h4, h5, h6,
+.hero-copy h2,
+.section-heading h3,
+.commerce-banner h3,
+.highlight-card strong,
+.stat-card strong,
+.feature-card h4,
+.quick-link strong,
+.brand-name,
+.product-body h3,
+.product-detail h2,
+.catalog-page .page-heading h2,
+.product-page .page-heading h2 {
+  font-family: "Lato", sans-serif !important;
+}
+
+/* ── 5. Responsivo ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .brand-row  { padding: 12px 16px !important; }
+  .commerce-nav { padding: 6px 16px !important; }
+  .footer-grid  { padding: 20px 16px !important; }
 }

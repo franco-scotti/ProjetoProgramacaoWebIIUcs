@@ -61,6 +61,8 @@ if ($produtoId > 0) {
             'quantidade' => $quantidade,
         ];
     }
+
+    $_SESSION['flash_message'] = 'Produto adicionado ao carrinho com sucesso!';
 }
 
 header('Location: ' . $referer);

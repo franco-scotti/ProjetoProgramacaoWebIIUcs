@@ -10,29 +10,31 @@ $enderecoDao = $factory->getEnderecoDao();
 
 $endereco_id = isset($_GET['endereco_id']) ? $_GET['endereco_id'] : null;
 
+$numero = isset($_GET['numero']) ? trim((string)$_GET['numero']) : (isset($_GET['numero_end']) ? trim((string)$_GET['numero_end']) : '');
+
 if ($endereco_id) {
     $endereco = new Endereco(
         $endereco_id,
-        $_GET['rua'],
-        $_GET['numero'],
-        $_GET['complemento'],
-        $_GET['bairro'],
-        $_GET['cep'],
-        $_GET['cidade'],
-        $_GET['estado']
+        isset($_GET['rua']) ? trim((string)$_GET['rua']) : '',
+        $numero,
+        isset($_GET['complemento']) ? trim((string)$_GET['complemento']) : '',
+        isset($_GET['bairro']) ? trim((string)$_GET['bairro']) : '',
+        isset($_GET['cep']) ? trim((string)$_GET['cep']) : '',
+        isset($_GET['cidade']) ? trim((string)$_GET['cidade']) : '',
+        isset($_GET['estado']) ? trim((string)$_GET['estado']) : ''
     );
 
     $enderecoDao->altera($endereco);
 } else {
     $endereco = new Endereco(
         null,
-        $_GET['rua'],
-        $_GET['numero'],
-        $_GET['complemento'],
-        $_GET['bairro'],
-        $_GET['cep'],
-        $_GET['cidade'],
-        $_GET['estado']
+        isset($_GET['rua']) ? trim((string)$_GET['rua']) : '',
+        $numero,
+        isset($_GET['complemento']) ? trim((string)$_GET['complemento']) : '',
+        isset($_GET['bairro']) ? trim((string)$_GET['bairro']) : '',
+        isset($_GET['cep']) ? trim((string)$_GET['cep']) : '',
+        isset($_GET['cidade']) ? trim((string)$_GET['cidade']) : '',
+        isset($_GET['estado']) ? trim((string)$_GET['estado']) : ''
     );
 
     $enderecoDao->insere($endereco);

@@ -15,7 +15,6 @@ $offset      = ($paginaAtual - 1) * $itensPorPag;
 
 if (!$pedidoId) { echo json_encode(['erro' => 'pedido_id obrigatorio']); exit; }
 
-// Se for fornecedor, restringe aos produtos dele
 $tipo         = $_SESSION['usuario_tipo'] ?? '';
 $fornecedorId = ($tipo === 'fornecedor' && isset($_SESSION['usuario_fornecedor_id']) && $_SESSION['usuario_fornecedor_id'] !== null)
                 ? (int)$_SESSION['usuario_fornecedor_id']
@@ -23,11 +22,9 @@ $fornecedorId = ($tipo === 'fornecedor' && isset($_SESSION['usuario_fornecedor_i
 
 $pdo = $factory->getConnection();
 
-// Filtro de fornecedor: inclui cláusula extra quando necessário
 $filtroForn      = $fornecedorId !== null ? " AND pr.fornecedor_id = :fid" : "";
 $filtroFornFotos = $fornecedorId !== null ? " AND pr.fornecedor_id = :fid" : "";
 
-// Contagem de itens (filtrada)
 $stmtCount = $pdo->prepare(
     "SELECT COUNT(*)
      FROM item_pedido ip
@@ -39,7 +36,6 @@ if ($fornecedorId !== null) $stmtCount->bindValue(':fid', $fornecedorId, PDO::PA
 $stmtCount->execute();
 $total = (int)$stmtCount->fetchColumn();
 
-// Itens paginados (filtrados)
 $stmt = $pdo->prepare(
     "SELECT ip.id, ip.quantidade, ip.preco,
             pr.id AS produto_id, pr.nome AS produto_nome,
@@ -76,7 +72,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     ];
 }
 
-// Fotos para o carrossel — apenas pág 1, filtradas pelo mesmo critério
 $fotos = [];
 if ($paginaAtual === 1) {
     $stmtF = $pdo->prepare(
@@ -100,7 +95,6 @@ if ($paginaAtual === 1) {
     }
 }
 
-// Rótulo do total: indica ao fornecedor que é parcial
 $totalLabel = $fornecedorId !== null ? 'Total dos meus produtos' : 'Total';
 
 echo json_encode([

@@ -34,15 +34,16 @@ if($usuario) {
         if ($usuario->isAdmin()) {
             $_SESSION["usuario_tipo"] = 'admin';
         } else {
-            $cliente = $factory->getClienteDao()->buscaPorUsuarioId($usuario->getId());
-            if ($cliente) {
-                $_SESSION["usuario_tipo"] = 'cliente';
-                $_SESSION["usuario_cliente_id"] = $cliente->getId();
+            $fornecedor = $factory->getFornecedorDao()->buscaPorUsuarioId($usuario->getId());
+            if ($fornecedor) {
+                $_SESSION["usuario_tipo"] = 'fornecedor';
+                $_SESSION["usuario_fornecedor_id"] = $fornecedor->getId();
+                $_SESSION["usuario_cliente_id"] = null;
             } else {
-                $fornecedor = $factory->getFornecedorDao()->buscaPorUsuarioId($usuario->getId());
-                if ($fornecedor) {
-                    $_SESSION["usuario_tipo"] = 'fornecedor';
-                    $_SESSION["usuario_fornecedor_id"] = $fornecedor->getId();
+                $cliente = $factory->getClienteDao()->buscaPorUsuarioId($usuario->getId());
+                if ($cliente) {
+                    $_SESSION["usuario_tipo"] = 'cliente';
+                    $_SESSION["usuario_cliente_id"] = $cliente->getId();
                 }
             }
         }

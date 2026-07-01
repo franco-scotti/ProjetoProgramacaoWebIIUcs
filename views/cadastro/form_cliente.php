@@ -3,9 +3,29 @@ if (!defined('BASE_URL')) {
     define('BASE_URL', '/ProjetoProgramacaoWebIIUcs');
 }
 
+include_once dirname(__DIR__, 2) . "/app/controllers/login/comum.php";
 include_once dirname(__DIR__, 2) . "/routes/fachada.php";
 
+if (is_session_started() === FALSE) {
+    session_start();
+}
+
 $id = isset($_GET["id"]) ? $_GET["id"] : null;
+$tipoUsuario = $_SESSION['usuario_tipo'] ?? null;
+$clienteLogadoId = isset($_SESSION['usuario_cliente_id']) ? (int)$_SESSION['usuario_cliente_id'] : 0;
+
+if ($tipoUsuario === 'cliente') {
+    if ($id === null || $id === '') {
+        $id = $clienteLogadoId ?: null;
+    }
+    if ($id !== null && (int)$id !== $clienteLogadoId) {
+        header('Location: ' . BASE_URL . '/public/portal_cliente.php');
+        exit;
+    }
+} elseif ($tipoUsuario !== 'admin') {
+    header('Location: ' . BASE_URL . '/public/login.php');
+    exit;
+}
 
 $cliente = null;
 $endereco = null;
@@ -66,6 +86,15 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
             </td>
         </tr>
 
+        <?php if ($tipoUsuario === 'cliente'): ?>
+        <tr>
+            <td>Usuário</td>
+            <td>
+                <input type='text' class='form-control' value="<?= htmlspecialchars($_SESSION['nome_usuario'] ?? '') ?>" disabled />
+                <input type='hidden' name='usuario_id' value="<?= htmlspecialchars((string)($_SESSION['id_usuario'] ?? '')) ?>" />
+            </td>
+        </tr>
+        <?php else: ?>
         <tr>
             <td>Usuário</td>
             <td>
@@ -80,6 +109,7 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
                 </select>
             </td>
         </tr>
+        <?php endif; ?>
 
         <tr>
             <td>Cartao Credito</td>
@@ -166,7 +196,7 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
                     <?= $textoBotao ?>
                 </button>
 
-                <a href="<?= BASE_URL ?>/views/listagem/lista_clientes.php"
+                <a href="<?= $tipoUsuario === 'cliente' ? BASE_URL . '/public/portal_cliente.php' : BASE_URL . '/views/listagem/lista_clientes.php' ?>"
                    class="btn btn-primary left-margin">
                     Cancela
                 </a>

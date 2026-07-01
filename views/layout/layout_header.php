@@ -25,8 +25,8 @@ $paginaAtual  = basename($_SERVER['PHP_SELF']);
 $logado       = isset($_SESSION['id_usuario']);
 $tipoUsuario  = $_SESSION['usuario_tipo'] ?? null;   // 'admin' | 'cliente' | 'fornecedor' | 'usuario'
 $isAdmin      = $tipoUsuario === 'admin';
-$isFornecedor = $tipoUsuario === 'fornecedor';
-$isCliente    = $tipoUsuario === 'cliente';
+$isFornecedor = ($tipoUsuario === 'fornecedor') || !empty($_SESSION['usuario_fornecedor_id']);
+$isCliente    = ($tipoUsuario === 'cliente') || !empty($_SESSION['usuario_cliente_id']);
 
 // --- Menu principal (esquerda) ---
 $menuPrincipal = [
@@ -95,7 +95,11 @@ if ($isAdmin) {
                     <?php
                     if ($logado) {
                         $roleLabel = $tipoUsuario ? ' (' . htmlspecialchars($tipoUsuario) . ')' : '';
-                        echo "<span>" . htmlspecialchars($_SESSION['nome_usuario']) . $roleLabel . "</span>";
+                        $perfilLink = BASE_URL . '/views/cadastro/form_cliente.php';
+                        if ($tipoUsuario === 'cliente' && !empty($_SESSION['usuario_cliente_id'])) {
+                            $perfilLink .= '?id=' . (int)$_SESSION['usuario_cliente_id'];
+                        }
+                        echo "<a href='" . $perfilLink . "' class='session-link' style='color:inherit;text-decoration:none;'>" . htmlspecialchars($_SESSION['nome_usuario']) . $roleLabel . "</a>";
                         echo " <a href='" . BASE_URL . "/app/controllers/login/executa_logout.php' class='session-link'>Sair</a>";
                     } else {
                         echo "<a href='" . BASE_URL . "/public/login.php' class='session-link'>Entrar</a>";
@@ -131,5 +135,15 @@ if ($isAdmin) {
             </div>
         </nav>
     </header>
+
+    <?php
+    $flashMessage = $_SESSION['flash_message'] ?? null;
+    if ($flashMessage !== null) {
+        unset($_SESSION['flash_message']);
+        echo "<div class='container' style='margin-top: 20px;'>";
+        echo "<div class='alert alert-success'>" . htmlspecialchars($flashMessage) . "</div>";
+        echo "</div>";
+    }
+    ?>
 
     <main class="page-shell">

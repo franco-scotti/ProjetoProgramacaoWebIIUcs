@@ -6,14 +6,21 @@ if (!defined('BASE_URL')) {
 include_once dirname(__DIR__, 2) . "/routes/fachada.php";
 
 $dao = $factory->getUsuarioDao();
+$clienteDao = $factory->getClienteDao();
+$fornecedorDao = $factory->getFornecedorDao();
 
-function escreveLinhasUsuarios($usuarios) {
+function escreveLinhasUsuarios($usuarios, $clienteDao, $fornecedorDao) {
     if($usuarios) {
         foreach ($usuarios as $usuario) {
+            $cliente = $clienteDao->buscaPorUsuarioId($usuario->getId());
+            $fornecedor = $fornecedorDao->buscaPorUsuarioId($usuario->getId());
+
             echo "<tr>";
-            echo "<td>{$usuario->getLogin()}</td>";
-            echo "<td>{$usuario->getNome()}</td>";
+            echo "<td>" . htmlspecialchars((string)$usuario->getLogin()) . "</td>";
+            echo "<td>" . htmlspecialchars((string)$usuario->getNome()) . "</td>";
             echo "<td>" . ($usuario->isAdmin() ? 'Sim' : 'Não') . "</td>";
+            echo "<td>" . ($cliente ? 'Sim' : 'Não') . "</td>";
+            echo "<td>" . ($fornecedor ? 'Sim' : 'Não') . "</td>";
             echo "<td>";
             echo "<a href='" . BASE_URL . "/views/detalhes/mostra_usuario.php?id={$usuario->getId()}' class='btn btn-primary left-margin'>";
             echo "<span class='glyphicon glyphicon-list'></span> Mostra";
@@ -31,7 +38,7 @@ function escreveLinhasUsuarios($usuarios) {
             echo "</tr>";
         }
     } else {
-        echo "<tr><td colspan='4'>Nenhum usuário encontrado</td></tr>";
+        echo "<tr><td colspan='6'>Nenhum usuário encontrado</td></tr>";
     }
 }
 
@@ -44,7 +51,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
         $usuarios = $dao->buscaTodos(10, 0);
     }
 
-    escreveLinhasUsuarios($usuarios);
+    escreveLinhasUsuarios($usuarios, $clienteDao, $fornecedorDao);
     exit;
 }
 
@@ -79,11 +86,13 @@ echo "<table class='table table-hover table-responsive table-bordered'>";
         echo "<th>Login</th>";
         echo "<th>Nome</th>";
         echo "<th>Admin</th>";
+        echo "<th>Cliente</th>";
+        echo "<th>Fornecedor</th>";
         echo "<th>Ações</th>";
     echo "</tr>";
 
     echo "<tbody id='resultadoUsuarios'>";
-        escreveLinhasUsuarios($usuarios);
+        escreveLinhasUsuarios($usuarios, $clienteDao, $fornecedorDao);
     echo "</tbody>";
 echo "</table>";
 

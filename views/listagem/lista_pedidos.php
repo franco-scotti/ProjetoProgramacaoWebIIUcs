@@ -78,7 +78,7 @@ if ($termo !== '') {
     $totalPaginas = max(1, (int)ceil($total / $itensPorPagina));
     if ($paginaAtual > $totalPaginas) $paginaAtual = $totalPaginas;
     $offset  = ($paginaAtual - 1) * $itensPorPagina;
-    $pedidos = $dao->buscaTodos($offset, $itensPorPagina);
+    $pedidos = $dao->buscaTodos($itensPorPagina, $offset);
 }
 
 include_once dirname(__DIR__) . "/layout/layout_header.php";

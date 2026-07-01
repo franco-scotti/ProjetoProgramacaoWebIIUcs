@@ -14,6 +14,32 @@ $erroMsg = '';
 if ($erro === '1') $erroMsg = 'Erro ao finalizar o pedido. Tente novamente.';
 elseif ($erro === 'login_duplicado') $erroMsg = 'O login informado já está em uso. Escolha outro.';
 elseif ($erro === 'campos_obrigatorios') $erroMsg = 'Preencha todos os campos obrigatórios.';
+
+$clientePersistido = null;
+$enderecoSalvo = '';
+$cartaoSalvo = '';
+$usaraDadosSalvos = false;
+
+if ($logado) {
+    $clientePersistido = $factory->getClienteDao()->buscaPorUsuarioId((int)$_SESSION['id_usuario']);
+    if ($clientePersistido) {
+        $enderecoObj = $clientePersistido->getEndereco();
+        if ($enderecoObj) {
+            $partesEndereco = array();
+            if ($enderecoObj->getRua()) $partesEndereco[] = $enderecoObj->getRua();
+            if ($enderecoObj->getNumero()) $partesEndereco[] = $enderecoObj->getNumero();
+            if ($enderecoObj->getComplemento()) $partesEndereco[] = $enderecoObj->getComplemento();
+            if ($enderecoObj->getBairro()) $partesEndereco[] = $enderecoObj->getBairro();
+            if ($enderecoObj->getCidade()) $partesEndereco[] = $enderecoObj->getCidade();
+            if ($enderecoObj->getEstado()) $partesEndereco[] = $enderecoObj->getEstado();
+            if ($enderecoObj->getCep()) $partesEndereco[] = $enderecoObj->getCep();
+            $enderecoSalvo = implode(', ', $partesEndereco);
+        }
+
+        $cartaoSalvo = trim((string)$clientePersistido->getCartaoCredito());
+        $usaraDadosSalvos = ($enderecoSalvo !== '' || $cartaoSalvo !== '');
+    }
+}
 ?>
 <section>
     <h2>Finalizar Pedido</h2>
@@ -90,14 +116,21 @@ elseif ($erro === 'campos_obrigatorios') $erroMsg = 'Preencha todos os campos ob
             <div class="card mb-4">
                 <div class="card-header"><strong>Entrega e Pagamento</strong></div>
                 <div class="card-body">
-                    <div class="form-group">
-                        <label>Endereço de entrega <span class="text-danger">*</span></label>
-                        <textarea name="endereco" class="form-control" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Cartão (demo)</label>
-                        <input type="text" name="cartao" class="form-control" placeholder="0000 0000 0000 0000" />
-                    </div>
+                    <?php if ($logado && $usaraDadosSalvos) { ?>
+                        <div class="alert alert-info mb-3">
+                            Usaremos o endereço e o cartão já cadastrados para este cliente.
+                        </div>
+                    <?php } else { ?>
+                        <div class="form-group">
+                            <label>Endereço de entrega <span class="text-danger">*</span></label>
+                            <textarea name="endereco" class="form-control" required><?php echo htmlspecialchars($_GET['endereco'] ?? ($logado ? $enderecoSalvo : '')); ?></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Cartão (demo)</label>
+                            <input type="text" name="cartao" class="form-control" placeholder="0000 0000 0000 0000"
+                                   value="<?php echo htmlspecialchars($_GET['cartao'] ?? ($logado ? $cartaoSalvo : '')); ?>" />
+                        </div>
+                    <?php } ?>
                 </div>
             </div>
 

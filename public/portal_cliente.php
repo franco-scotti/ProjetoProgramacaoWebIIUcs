@@ -36,6 +36,11 @@ include_once dirname(__DIR__) . "/views/layout/layout_header.php";
             <a href="<?php echo BASE_URL; ?>/public/meus_pedidos.php" class="btn btn-primary">Ver meus pedidos</a>
         </div>
         <div class="feature-card">
+            <h4>Meus dados</h4>
+            <p>Atualize seu nome, telefone, e-mail, cartão e endereço cadastrado.</p>
+            <a href="<?php echo BASE_URL; ?>/views/cadastro/form_cliente.php" class="btn btn-primary">Editar meus dados</a>
+        </div>
+        <div class="feature-card">
             <h4>Meu carrinho</h4>
             <p>Revisar itens antes de finalizar a compra.</p>
             <a href="<?php echo BASE_URL; ?>/public/carrinho.php" class="btn btn-primary">Ir ao carrinho</a>

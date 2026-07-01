@@ -62,8 +62,8 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
         </tr>
         <tr>
             <td>Número</td>
-            <td><input type='text' name='numero_end' class='form-control'
-                       value="<?= $endereco ? htmlspecialchars($endereco->getNumero()) : '' ?>" /></td>
+            <td><input type='text' name='numero' class='form-control'
+                       value="<?= htmlspecialchars((string)($endereco ? $endereco->getNumero() : '')) ?>" /></td>
         </tr>
         <tr>
             <td>Complemento</td>

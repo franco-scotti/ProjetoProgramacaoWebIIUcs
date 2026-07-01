@@ -27,6 +27,33 @@ $senha     = trim((string)($_POST['senha']         ?? ''));
 $senhaConf = trim((string)($_POST['senha_confirma']?? ''));
 
 $logado    = isset($_SESSION['id_usuario']);
+$clientePersistido = null;
+if ($logado) {
+    $clientePersistido = $factory->getClienteDao()->buscaPorUsuarioId((int)$_SESSION['id_usuario']);
+    if ($clientePersistido && empty($_SESSION['usuario_cliente_id'])) {
+        $_SESSION['usuario_cliente_id'] = $clientePersistido->getId();
+    }
+}
+
+$enderecoParaPedido = $endereco;
+$cartaoParaPedido   = $cartao;
+if ($enderecoParaPedido === '' && $clientePersistido) {
+    $enderecoObj = $clientePersistido->getEndereco();
+    if ($enderecoObj) {
+        $partesEndereco = array();
+        if ($enderecoObj->getRua()) $partesEndereco[] = $enderecoObj->getRua();
+        if ($enderecoObj->getNumero()) $partesEndereco[] = $enderecoObj->getNumero();
+        if ($enderecoObj->getComplemento()) $partesEndereco[] = $enderecoObj->getComplemento();
+        if ($enderecoObj->getBairro()) $partesEndereco[] = $enderecoObj->getBairro();
+        if ($enderecoObj->getCidade()) $partesEndereco[] = $enderecoObj->getCidade();
+        if ($enderecoObj->getEstado()) $partesEndereco[] = $enderecoObj->getEstado();
+        if ($enderecoObj->getCep()) $partesEndereco[] = $enderecoObj->getCep();
+        $enderecoParaPedido = implode(', ', $partesEndereco);
+    }
+}
+if ($cartaoParaPedido === '' && $clientePersistido) {
+    $cartaoParaPedido = trim((string)$clientePersistido->getCartaoCredito());
+}
 
 // --- Registro de usuário (somente se não estiver logado) ---
 if (!$logado) {
@@ -121,7 +148,7 @@ try {
             $stmt->bindValue(':nome',       $nomeCliente);
             $stmt->bindValue(':telefone',   $telefone !== '' ? $telefone : null, PDO::PARAM_STR);
             $stmt->bindValue(':email',      $email    !== '' ? $email    : null, PDO::PARAM_STR);
-            $stmt->bindValue(':cartao',     $cartao   !== '' ? $cartao   : null, PDO::PARAM_STR);
+            $stmt->bindValue(':cartao',     $cartaoParaPedido !== '' ? $cartaoParaPedido : null, PDO::PARAM_STR);
             $stmt->bindValue(':usuario_id', $usuarioIdNovo,                      PDO::PARAM_INT);
             $stmt->execute();
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -139,6 +166,13 @@ try {
             $stmt->execute();
             $_SESSION['usuario_cliente_id'] = $clienteId;
         }
+    }
+
+    if ($clientePersistido && $clientePersistido->getId() && $clienteId === (int)$clientePersistido->getId() && $cartaoParaPedido !== '') {
+        $stmtUpdateCartao = $pdo->prepare("UPDATE cliente SET cartao_credito = :cartao WHERE id = :id");
+        $stmtUpdateCartao->bindValue(':cartao', $cartaoParaPedido, PDO::PARAM_STR);
+        $stmtUpdateCartao->bindValue(':id', (int)$clientePersistido->getId(), PDO::PARAM_INT);
+        $stmtUpdateCartao->execute();
     }
 
     // Cria o pedido
@@ -194,7 +228,7 @@ try {
         'pedido_id' => $pedidoId,
         'nome'      => $nome,
         'email'     => $email,
-        'endereco'  => $endereco,
+        'endereco'  => $enderecoParaPedido,
         'total'     => $total,
         'items'     => $cart
     );
