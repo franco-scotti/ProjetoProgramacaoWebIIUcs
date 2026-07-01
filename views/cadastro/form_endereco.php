@@ -34,11 +34,12 @@ $clienteAtualId    = $endereco && $endereco->getCliente()    ? $endereco->getCli
 include_once dirname(__DIR__) . "/layout/layout_header.php";
 
 $erros = [
-    'vinculo_invalido'   => 'Informe apenas um vínculo: Fornecedor ou Cliente.',
-    'fornecedor_invalido'=> 'Fornecedor não encontrado.',
-    'cliente_invalido'   => 'Cliente não encontrado.',
-    'erro_insercao'      => 'Não foi possível inserir o endereço.',
-    'erro_alteracao'     => 'Não foi possível alterar o endereço.',
+    'campos_obrigatorios' => 'Preencha todos os campos obrigatórios.',
+    'vinculo_invalido'    => 'Informe apenas um vínculo: Fornecedor ou Cliente.',
+    'fornecedor_invalido' => 'Fornecedor não encontrado.',
+    'cliente_invalido'    => 'Cliente não encontrado.',
+    'erro_insercao'       => 'Não foi possível inserir o endereço.',
+    'erro_alteracao'      => 'Não foi possível alterar o endereço.',
 ];
 if ($erro && isset($erros[$erro])) {
     echo "<div class='alert alert-danger'>" . $erros[$erro] . "</div>";
@@ -48,38 +49,38 @@ if ($erro && isset($erros[$erro])) {
 <form action="<?= $action ?>" method="get">
     <table class='table table-hover table-responsive table-bordered'>
         <tr>
-            <td>Rua</td>
-            <td><input type='text' name='rua' class='form-control'
+            <td>Rua <span class="text-danger">*</span></td>
+            <td><input type='text' name='rua' class='form-control' required
                        value="<?= $endereco ? htmlspecialchars($endereco->getRua()) : '' ?>" /></td>
         </tr>
         <tr>
-            <td>Número</td>
-            <td><input type='text' name='numero' class='form-control'
+            <td>Número <span class="text-danger">*</span></td>
+            <td><input type='text' name='numero' class='form-control' required
                        value="<?= $endereco ? htmlspecialchars($endereco->getNumero()) : '' ?>" /></td>
         </tr>
         <tr>
-            <td>Complemento</td>
-            <td><input type='text' name='complemento' class='form-control'
+            <td>Complemento <span class="text-danger">*</span></td>
+            <td><input type='text' name='complemento' class='form-control' required
                        value="<?= $endereco ? htmlspecialchars($endereco->getComplemento()) : '' ?>" /></td>
         </tr>
         <tr>
-            <td>Bairro</td>
-            <td><input type='text' name='bairro' class='form-control'
+            <td>Bairro <span class="text-danger">*</span></td>
+            <td><input type='text' name='bairro' class='form-control' required
                        value="<?= $endereco ? htmlspecialchars($endereco->getBairro()) : '' ?>" /></td>
         </tr>
         <tr>
-            <td>CEP</td>
-            <td><input type='text' name='cep' class='form-control'
+            <td>CEP <span class="text-danger">*</span></td>
+            <td><input type='text' name='cep' class='form-control' required
                        value="<?= $endereco ? htmlspecialchars($endereco->getCep()) : '' ?>" /></td>
         </tr>
         <tr>
-            <td>Cidade</td>
-            <td><input type='text' name='cidade' class='form-control'
+            <td>Cidade <span class="text-danger">*</span></td>
+            <td><input type='text' name='cidade' class='form-control' required
                        value="<?= $endereco ? htmlspecialchars($endereco->getCidade()) : '' ?>" /></td>
         </tr>
         <tr>
-            <td>Estado</td>
-            <td><input type='text' name='estado' class='form-control'
+            <td>Estado <span class="text-danger">*</span></td>
+            <td><input type='text' name='estado' class='form-control' required
                        value="<?= $endereco ? htmlspecialchars($endereco->getEstado()) : '' ?>" /></td>
         </tr>
         <tr>

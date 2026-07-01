@@ -5,6 +5,7 @@ if (!defined('BASE_URL')) {
 
 include_once dirname(__DIR__, 3) . "/app/controllers/login/comum.php";
 include_once dirname(__DIR__, 3) . "/routes/fachada.php";
+include_once dirname(__DIR__) . "/valida_campos.php";
 
 if (is_session_started() === FALSE) {
     session_start();
@@ -24,6 +25,29 @@ if ($tipoUsuario === 'cliente') {
     }
 } elseif ($tipoUsuario !== 'admin') {
     header('Location: ' . BASE_URL . '/public/login.php');
+    exit;
+}
+
+$campos = ['rua','numero','complemento','bairro','cep','cidade','estado','nome','telefone','email','cartao_credito'];
+$dados = [
+    'rua' => trim((string)($_GET['rua'] ?? '')),
+    'numero' => trim((string)($_GET['numero'] ?? '')),
+    'complemento' => trim((string)($_GET['complemento'] ?? '')),
+    'bairro' => trim((string)($_GET['bairro'] ?? '')),
+    'cep' => trim((string)($_GET['cep'] ?? '')),
+    'cidade' => trim((string)($_GET['cidade'] ?? '')),
+    'estado' => trim((string)($_GET['estado'] ?? '')),
+    'nome' => trim((string)($_GET['nome'] ?? '')),
+    'telefone' => trim((string)($_GET['telefone'] ?? '')),
+    'email' => trim((string)($_GET['email'] ?? '')),
+    'cartao_credito' => trim((string)($_GET['cartao_credito'] ?? '')),
+];
+
+if (!empty(camposObrigatorios($campos, $dados))) {
+    $redirect = $tipoUsuario === 'cliente'
+        ? BASE_URL . '/public/portal_cliente.php'
+        : BASE_URL . '/views/cadastro/form_cliente.php?id=' . $clienteId;
+    header('Location: ' . $redirect . '&erro=campos_obrigatorios');
     exit;
 }
 

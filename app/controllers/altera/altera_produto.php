@@ -5,6 +5,7 @@ if (!defined('BASE_URL')) {
 
 include_once dirname(__DIR__, 3) . "/app/controllers/login/comum.php";
 include_once dirname(__DIR__, 3) . "/routes/fachada.php";
+include_once dirname(__DIR__) . "/valida_campos.php";
 
 if (is_session_started() === FALSE) session_start();
 
@@ -22,6 +23,13 @@ if (!$isAdmin && $tipo !== 'fornecedor') {
 $id        = (int)($_POST['id'] ?? 0);
 $nome      = trim((string)($_POST['nome']      ?? ''));
 $descricao = trim((string)($_POST['descricao'] ?? ''));
+$campos = ['nome','descricao'];
+$dados = ['nome' => $nome, 'descricao' => $descricao];
+
+if (!empty(camposObrigatorios($campos, $dados))) {
+    header('Location: ' . BASE_URL . '/views/cadastro/form_produto.php?id=' . $id . '&erro=campos_obrigatorios');
+    exit;
+}
 
 // Carrega produto atual para validar posse e manter foto se não enviada nova
 $dao            = $factory->getProdutoDao();

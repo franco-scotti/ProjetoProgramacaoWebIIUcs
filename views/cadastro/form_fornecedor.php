@@ -7,6 +7,7 @@ include_once dirname(__DIR__, 2) . "/routes/fachada.php";
 include_once dirname(__DIR__, 2) . "/app/controllers/login/verifica.php";
 
 $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
+$erro = $_GET['erro'] ?? '';
 $fornecedor = null;
 $endereco   = null;
 
@@ -27,28 +28,37 @@ if ($id) {
 }
 
 include_once dirname(__DIR__) . "/layout/layout_header.php";
+
+$erros = [
+    'campos_obrigatorios' => 'Preencha todos os campos obrigatórios.',
+    'erro_insercao' => 'Não foi possível salvar o fornecedor.',
+    'erro_alteracao' => 'Não foi possível alterar o fornecedor.',
+];
+if ($erro && isset($erros[$erro])) {
+    echo "<div class='alert alert-danger'>" . $erros[$erro] . "</div>";
+}
 ?>
 <section>
 <form action="<?= $action ?>" method="get">
     <table class='table table-hover table-responsive table-bordered'>
         <tr>
-            <td>Nome</td>
-            <td><input type='text' name='nome' class='form-control'
+            <td>Nome <span class="text-danger">*</span></td>
+            <td><input type='text' name='nome' class='form-control' required
                        value="<?= $fornecedor ? htmlspecialchars($fornecedor->getNome()) : '' ?>" /></td>
         </tr>
         <tr>
-            <td>Descrição</td>
-            <td><input type='text' name='descricao' class='form-control'
+            <td>Descrição <span class="text-danger">*</span></td>
+            <td><input type='text' name='descricao' class='form-control' required
                        value="<?= $fornecedor ? htmlspecialchars($fornecedor->getDescricao()) : '' ?>" /></td>
         </tr>
         <tr>
-            <td>Telefone</td>
-            <td><input type='text' name='telefone' class='form-control'
+            <td>Telefone <span class="text-danger">*</span></td>
+            <td><input type='text' name='telefone' class='form-control' required
                        value="<?= $fornecedor ? htmlspecialchars($fornecedor->getTelefone()) : '' ?>" /></td>
         </tr>
         <tr>
-            <td>Email</td>
-            <td><input type='text' name='email' class='form-control'
+            <td>Email <span class="text-danger">*</span></td>
+            <td><input type='text' name='email' class='form-control' required
                        value="<?= $fornecedor ? htmlspecialchars($fornecedor->getEmail()) : '' ?>" /></td>
         </tr>
     </table>
@@ -56,38 +66,38 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
     <h3>Endereço</h3>
     <table class='table table-hover table-responsive table-bordered'>
         <tr>
-            <td>Rua</td>
-            <td><input type='text' name='rua' class='form-control'
+            <td>Rua <span class="text-danger">*</span></td>
+            <td><input type='text' name='rua' class='form-control' required
                        value="<?= $endereco ? htmlspecialchars($endereco->getRua()) : '' ?>" /></td>
         </tr>
         <tr>
-            <td>Número</td>
-            <td><input type='text' name='numero' class='form-control'
+            <td>Número <span class="text-danger">*</span></td>
+            <td><input type='text' name='numero' class='form-control' required
                        value="<?= htmlspecialchars((string)($endereco ? $endereco->getNumero() : '')) ?>" /></td>
         </tr>
         <tr>
-            <td>Complemento</td>
-            <td><input type='text' name='complemento' class='form-control'
+            <td>Complemento <span class="text-danger">*</span></td>
+            <td><input type='text' name='complemento' class='form-control' required
                        value="<?= $endereco ? htmlspecialchars($endereco->getComplemento()) : '' ?>" /></td>
         </tr>
         <tr>
-            <td>Bairro</td>
-            <td><input type='text' name='bairro' class='form-control'
+            <td>Bairro <span class="text-danger">*</span></td>
+            <td><input type='text' name='bairro' class='form-control' required
                        value="<?= $endereco ? htmlspecialchars($endereco->getBairro()) : '' ?>" /></td>
         </tr>
         <tr>
-            <td>CEP</td>
-            <td><input type='text' name='cep' class='form-control'
+            <td>CEP <span class="text-danger">*</span></td>
+            <td><input type='text' name='cep' class='form-control' required
                        value="<?= $endereco ? htmlspecialchars($endereco->getCep()) : '' ?>" /></td>
         </tr>
         <tr>
-            <td>Cidade</td>
-            <td><input type='text' name='cidade' class='form-control'
+            <td>Cidade <span class="text-danger">*</span></td>
+            <td><input type='text' name='cidade' class='form-control' required
                        value="<?= $endereco ? htmlspecialchars($endereco->getCidade()) : '' ?>" /></td>
         </tr>
         <tr>
-            <td>Estado</td>
-            <td><input type='text' name='estado' class='form-control'
+            <td>Estado <span class="text-danger">*</span></td>
+            <td><input type='text' name='estado' class='form-control' required
                        value="<?= $endereco ? htmlspecialchars($endereco->getEstado()) : '' ?>" /></td>
         </tr>
         <tr>

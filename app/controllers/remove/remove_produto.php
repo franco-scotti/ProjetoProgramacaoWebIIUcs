@@ -6,7 +6,12 @@ include_once dirname(__DIR__, 3) . "/routes/fachada.php";
 
 $id = @$_GET["id"];
 $dao = $factory->getProdutoDao();
-$dao->removePorId($id);
+$removido = $dao->removePorId($id);
+
+if (!$removido) {
+    header("Location: " . BASE_URL . "/views/listagem/lista_produtos.php?erro=dependencia");
+    exit;
+}
 
 header("Location: " . BASE_URL . "/views/listagem/lista_produtos.php");
 exit;

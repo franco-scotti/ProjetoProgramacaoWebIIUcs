@@ -19,6 +19,7 @@ if (!$isAdmin && $tipo !== 'fornecedor') {
 }
 
 $id         = isset($_GET['id']) ? (int)$_GET['id'] : null;
+$erro       = $_GET['erro'] ?? '';
 $produto    = null;
 $prodFornId = $fornecedorId; // fornecedor vinculado ao produto (default = logado)
 
@@ -51,6 +52,13 @@ if ($id) {
 $fornecedores = $isAdmin ? $fornecedorDao->buscaTodos() : [];
 
 include_once dirname(__DIR__) . "/layout/layout_header.php";
+
+$erros = [
+    'campos_obrigatorios' => 'Preencha todos os campos obrigatórios.',
+];
+if ($erro && isset($erros[$erro])) {
+    echo "<div class='alert alert-danger'>" . $erros[$erro] . "</div>";
+}
 ?>
 
 <section>
@@ -59,7 +67,7 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
         <table class="table table-hover table-responsive table-bordered">
 
             <tr>
-                <td>Nome</td>
+                <td>Nome <span class="text-danger">*</span></td>
                 <td>
                     <input type="text" name="nome" class="form-control"
                            value="<?= $produto ? htmlspecialchars($produto->getNome()) : '' ?>" required />
@@ -67,17 +75,17 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
             </tr>
 
             <tr>
-                <td>Descrição</td>
+                <td>Descrição <span class="text-danger">*</span></td>
                 <td>
                     <input type="text" name="descricao" class="form-control"
-                           value="<?= $produto ? htmlspecialchars($produto->getDescricao()) : '' ?>" />
+                           value="<?= $produto ? htmlspecialchars($produto->getDescricao()) : '' ?>" required />
                 </td>
             </tr>
 
             <tr>
                 <td>Foto</td>
                 <td>
-                    <input type="file" name="foto" class="form-control" accept="image/*" />
+                    <input type="file" name="foto" class="form-control" accept="image/*" <?= $produto ? '' : 'required' ?> />
                     <?php
                     $foto = $produto ? $produto->getFoto() : null;
                     if ($foto) {
@@ -92,11 +100,11 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
             </tr>
 
             <tr>
-                <td>Fornecedor</td>
+                <td>Fornecedor <span class="text-danger">*</span></td>
                 <td>
                     <?php if ($isAdmin): ?>
                         <!-- Admin escolhe livremente -->
-                        <select name="fornecedor_id" class="form-control">
+                        <select name="fornecedor_id" class="form-control" required>
                             <option value="">Selecione um fornecedor</option>
                             <?php foreach ($fornecedores as $f): ?>
                                 <option value="<?= $f->getId() ?>"

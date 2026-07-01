@@ -18,7 +18,12 @@ if ($cliente && $cliente->getEndereco()) {
     $enderecoId = $cliente->getEndereco()->getId();
 }
 
-$clienteDao->removePorId($id);
+$removido = $clienteDao->removePorId($id);
+
+if (!$removido) {
+    header("Location: " . BASE_URL . "/views/listagem/lista_clientes.php?erro=dependencia");
+    exit;
+}
 
 if ($enderecoId) {
     $enderecoDao->removePorId($enderecoId);

@@ -5,6 +5,7 @@ if (!defined('BASE_URL')) {
 
 include_once dirname(__DIR__, 3) . "/app/controllers/login/comum.php";
 include_once dirname(__DIR__, 3) . "/routes/fachada.php";
+include_once dirname(__DIR__) . "/valida_campos.php";
 
 if (is_session_started() === FALSE) session_start();
 
@@ -21,6 +22,13 @@ if (!$isAdmin && $tipo !== 'fornecedor') {
 
 $nome      = trim((string)($_POST['nome']      ?? ''));
 $descricao = trim((string)($_POST['descricao'] ?? ''));
+$campos = ['nome','descricao'];
+$dados = ['nome' => $nome, 'descricao' => $descricao];
+
+if (!empty(camposObrigatorios($campos, $dados))) {
+    header('Location: ' . BASE_URL . '/views/cadastro/form_produto.php?erro=campos_obrigatorios');
+    exit;
+}
 
 // Fornecedor_id: se logado como fornecedor, ignora o POST e usa a sessão
 if ($fornecedorId !== null) {

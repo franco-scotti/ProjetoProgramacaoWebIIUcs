@@ -36,11 +36,11 @@ class PostgresUsuarioDao extends PostgresDao implements UsuarioDao {
 
         $stmt->bindParam(':id', $id);
 
-        if($stmt->execute()){
-            return true;
-        }    
-
-        return false;
+        try {
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            return false;
+        }
     }
 
     public function remove($usuario) {

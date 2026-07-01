@@ -79,9 +79,9 @@ if ($logado) {
                                required />
                     </div>
                     <div class="form-group">
-                        <label>Telefone</label>
+                        <label>Telefone <span class="text-danger">*</span></label>
                         <input type="text" name="telefone" class="form-control"
-                               value="<?php echo htmlspecialchars($_GET['telefone'] ?? ''); ?>" />
+                               value="<?php echo htmlspecialchars($_GET['telefone'] ?? ''); ?>" required />
                     </div>
 
                     <hr>
@@ -126,9 +126,9 @@ if ($logado) {
                             <textarea name="endereco" class="form-control" required><?php echo htmlspecialchars($_GET['endereco'] ?? ($logado ? $enderecoSalvo : '')); ?></textarea>
                         </div>
                         <div class="form-group">
-                            <label>Cartão (demo)</label>
+                            <label>Cartão (demo) <span class="text-danger">*</span></label>
                             <input type="text" name="cartao" class="form-control" placeholder="0000 0000 0000 0000"
-                                   value="<?php echo htmlspecialchars($_GET['cartao'] ?? ($logado ? $cartaoSalvo : '')); ?>" />
+                                   value="<?php echo htmlspecialchars($_GET['cartao'] ?? ($logado ? $cartaoSalvo : '')); ?>" required />
                         </div>
                     <?php } ?>
                 </div>

@@ -42,11 +42,11 @@ class PostgresFornecedorDao extends PostgresDao implements FornecedorDao {
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(':id', $id);
 
-        if($stmt->execute()){
-            return true;
+        try {
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            return false;
         }
-
-        return false;
     }
 
     public function remove($fornecedor) {

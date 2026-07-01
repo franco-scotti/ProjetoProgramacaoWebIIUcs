@@ -4,6 +4,7 @@ if (!defined('BASE_URL')) {
 }
 include_once dirname(__DIR__, 3) . "/app/controllers/login/comum.php";
 include_once dirname(__DIR__, 3) . "/routes/fachada.php";
+include_once dirname(__DIR__) . "/valida_campos.php";
 
 if (is_session_started() === FALSE) session_start();
 
@@ -18,6 +19,13 @@ $id         = (int)($_GET['id'] ?? 0);
 $produtoId  = trim((string)($_GET['produto_id'] ?? ''));
 $quantidade = trim((string)($_GET['quantidade'] ?? ''));
 $preco      = trim((string)($_GET['preco'] ?? ''));
+$campos = ['produto_id','quantidade','preco'];
+$dados = ['produto_id' => $produtoId, 'quantidade' => $quantidade, 'preco' => $preco];
+
+if (!empty(camposObrigatorios($campos, $dados))) {
+    header('Location: ' . BASE_URL . '/views/cadastro/form_estoque.php?id=' . $id . '&erro=campos_obrigatorios');
+    exit;
+}
 
 // Fornecedor: verifica se o estoque pertence a um produto seu
 if ($tipo === 'fornecedor') {

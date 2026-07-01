@@ -27,6 +27,7 @@ if ($tipoUsuario === 'cliente') {
     exit;
 }
 
+$erro = $_GET['erro'] ?? '';
 $cliente = null;
 $endereco = null;
 
@@ -52,6 +53,15 @@ if ($id) {
 }
 
 include_once dirname(__DIR__) . "/layout/layout_header.php";
+
+$erros = [
+    'campos_obrigatorios' => 'Preencha todos os campos obrigatórios.',
+    'erro_insercao' => 'Não foi possível salvar o cliente.',
+    'erro_alteracao' => 'Não foi possível alterar o cliente.',
+];
+if ($erro && isset($erros[$erro])) {
+    echo "<div class='alert alert-danger'>" . $erros[$erro] . "</div>";
+}
 ?>
 
 <section>
@@ -63,25 +73,25 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
     <table class='table table-hover table-responsive table-bordered'>
 
         <tr>
-            <td>Nome</td>
+            <td>Nome <span class="text-danger">*</span></td>
             <td>
-                <input type='text' name='nome' class='form-control'
+                <input type='text' name='nome' class='form-control' required
                        value="<?= $cliente ? $cliente->getNome() : '' ?>" />
             </td>
         </tr>
 
         <tr>
-            <td>Telefone</td>
+            <td>Telefone <span class="text-danger">*</span></td>
             <td>
-                <input type='text' name='telefone' class='form-control'
+                <input type='text' name='telefone' class='form-control' required
                        value="<?= $cliente ? $cliente->getTelefone() : '' ?>" />
             </td>
         </tr>
 
         <tr>
-            <td>Email</td>
+            <td>Email <span class="text-danger">*</span></td>
             <td>
-                <input type='text' name='email' class='form-control'
+                <input type='text' name='email' class='form-control' required
                        value="<?= $cliente ? $cliente->getEmail() : '' ?>" />
             </td>
         </tr>
@@ -112,9 +122,9 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
         <?php endif; ?>
 
         <tr>
-            <td>Cartao Credito</td>
+            <td>Cartao Credito <span class="text-danger">*</span></td>
             <td>
-                <input type='text' name='cartao_credito' class='form-control'
+                <input type='text' name='cartao_credito' class='form-control' required
                        value="<?= $cliente ? $cliente->getCartaoCredito() : '' ?>" />
             </td>
         </tr>
@@ -126,57 +136,57 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
     <table class='table table-hover table-responsive table-bordered'>
 
         <tr>
-            <td>Rua</td>
+            <td>Rua <span class="text-danger">*</span></td>
             <td>
-                <input type='text' name='rua' class='form-control'
+                <input type='text' name='rua' class='form-control' required
                        value="<?= $endereco ? $endereco->getRua() : '' ?>" />
             </td>
         </tr>
 
         <tr>
-            <td>Numero</td>
+            <td>Numero <span class="text-danger">*</span></td>
             <td>
-                <input type='text' name='numero' class='form-control'
+                <input type='text' name='numero' class='form-control' required
                        value="<?= $endereco ? $endereco->getNumero() : '' ?>" />
             </td>
         </tr>
 
         <tr>
-            <td>Complemento</td>
+            <td>Complemento <span class="text-danger">*</span></td>
             <td>
-                <input type='text' name='complemento' class='form-control'
+                <input type='text' name='complemento' class='form-control' required
                        value="<?= $endereco ? $endereco->getComplemento() : '' ?>" />
             </td>
         </tr>
 
         <tr>
-            <td>Bairro</td>
+            <td>Bairro <span class="text-danger">*</span></td>
             <td>
-                <input type='text' name='bairro' class='form-control'
+                <input type='text' name='bairro' class='form-control' required
                        value="<?= $endereco ? $endereco->getBairro() : '' ?>" />
             </td>
         </tr>
 
         <tr>
-            <td>CEP</td>
+            <td>CEP <span class="text-danger">*</span></td>
             <td>
-                <input type='text' name='cep' class='form-control'
+                <input type='text' name='cep' class='form-control' required
                        value="<?= $endereco ? $endereco->getCep() : '' ?>" />
             </td>
         </tr>
 
         <tr>
-            <td>Cidade</td>
+            <td>Cidade <span class="text-danger">*</span></td>
             <td>
-                <input type='text' name='cidade' class='form-control'
+                <input type='text' name='cidade' class='form-control' required
                        value="<?= $endereco ? $endereco->getCidade() : '' ?>" />
             </td>
         </tr>
 
         <tr>
-            <td>Estado</td>
+            <td>Estado <span class="text-danger">*</span></td>
             <td>
-                <input type='text' name='estado' class='form-control'
+                <input type='text' name='estado' class='form-control' required
                        value="<?= $endereco ? $endereco->getEstado() : '' ?>" />
             </td>
         </tr>

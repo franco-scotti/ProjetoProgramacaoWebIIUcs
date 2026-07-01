@@ -61,6 +61,11 @@ $page_title = "Demo : Listagem de Usuários";
 
 include_once dirname(__DIR__) . "/layout/layout_header.php";
 
+$erro = isset($_GET['erro']) ? $_GET['erro'] : '';
+if ($erro === 'dependencia') {
+    echo "<div class='alert alert-warning'>Não foi possível excluir este usuário porque ele está vinculado a outros registros do sistema.</div>";
+}
+
 $itensPorPagina = 10;
 $paginaAtual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
 

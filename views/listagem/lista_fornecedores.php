@@ -45,6 +45,12 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
 
 include_once dirname(__DIR__) . "/layout/layout_header.php";
 
+$erro = isset($_GET['erro']) ? $_GET['erro'] : '';
+
+if ($erro === 'dependencia') {
+    echo "<div class='alert alert-warning'>Não foi possível excluir este fornecedor porque ele está vinculado a outros registros, como produtos cadastrados.</div>";
+}
+
 echo "<section>";
 
 $itensPorPagina = 10;

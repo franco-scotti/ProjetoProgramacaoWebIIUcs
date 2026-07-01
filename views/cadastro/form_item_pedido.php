@@ -7,6 +7,7 @@ include_once dirname(__DIR__, 2) . "/routes/fachada.php";
 include_once dirname(__DIR__, 2) . "/app/controllers/login/verifica.php";
 
 $id   = isset($_GET['id']) ? (int)$_GET['id'] : null;
+$erro = $_GET['erro'] ?? '';
 $item = null;
 
 $itemDao    = $factory->getItemPedidoDao();
@@ -33,14 +34,21 @@ $pedidoAtualId  = $item && $item->getPedido()  ? $item->getPedido()->getId()  : 
 $produtoAtualId = $item && $item->getProduto() ? $item->getProduto()->getId() : '';
 
 include_once dirname(__DIR__) . "/layout/layout_header.php";
+
+$erros = [
+    'campos_obrigatorios' => 'Preencha todos os campos obrigatórios.',
+];
+if ($erro && isset($erros[$erro])) {
+    echo "<div class='alert alert-danger'>" . $erros[$erro] . "</div>";
+}
 ?>
 <section>
 <form action="<?= $action ?>" method="get">
     <table class='table table-hover table-responsive table-bordered'>
         <tr>
-            <td>Pedido</td>
+            <td>Pedido <span class="text-danger">*</span></td>
             <td>
-                <select name='pedido_id' class='form-control'>
+                <select name='pedido_id' class='form-control' required>
                     <option value=''>Selecione um pedido</option>
                     <?php foreach ($pedidos as $pedido): ?>
                         <option value='<?= $pedido->getId() ?>'
@@ -52,9 +60,9 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
             </td>
         </tr>
         <tr>
-            <td>Produto</td>
+            <td>Produto <span class="text-danger">*</span></td>
             <td>
-                <select name='produto_id' class='form-control'>
+                <select name='produto_id' class='form-control' required>
                     <option value=''>Selecione um produto</option>
                     <?php foreach ($produtos as $produto): ?>
                         <option value='<?= $produto->getId() ?>'
@@ -66,13 +74,13 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
             </td>
         </tr>
         <tr>
-            <td>Quantidade</td>
-            <td><input type='number' name='quantidade' min='1' class='form-control'
+            <td>Quantidade <span class="text-danger">*</span></td>
+            <td><input type='number' name='quantidade' min='1' class='form-control' required
                        value="<?= $item ? $item->getQuantidade() : '' ?>" /></td>
         </tr>
         <tr>
-            <td>Preço</td>
-            <td><input type='text' name='preco' class='form-control'
+            <td>Preço <span class="text-danger">*</span></td>
+            <td><input type='text' name='preco' class='form-control' required
                        value="<?= $item ? $item->getPreco() : '' ?>" /></td>
         </tr>
         <tr>

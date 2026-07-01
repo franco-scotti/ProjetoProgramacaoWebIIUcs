@@ -14,6 +14,11 @@ if (!isset($_SESSION['usuario_tipo']) || $_SESSION['usuario_tipo'] !== 'admin') 
 include_once dirname(__DIR__) . "/layout/layout_header.php";
 include_once dirname(__DIR__, 2) . "/routes/fachada.php";
 
+$erro = isset($_GET['erro']) ? $_GET['erro'] : '';
+if ($erro === 'dependencia') {
+    echo "<div class='alert alert-warning'>Não foi possível excluir este cliente porque ele está vinculado a outros registros, como pedidos ou endereços.</div>";
+}
+
 echo "<section>";
 
 $dao = $factory->getClienteDao();

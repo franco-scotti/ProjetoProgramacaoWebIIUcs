@@ -3,6 +3,7 @@ if (!defined('BASE_URL')) {
     define('BASE_URL', '/ProjetoProgramacaoWebIIUcs');
 }
 include_once dirname(__DIR__, 3) . "/routes/fachada.php";
+include_once dirname(__DIR__) . "/valida_campos.php";
 
 $rua = trim((string)@$_GET["rua"]);
 $numero = trim((string)@$_GET["numero"]);
@@ -13,6 +14,13 @@ $cidade = trim((string)@$_GET["cidade"]);
 $estado = trim((string)@$_GET["estado"]);
 $fornecedorId = trim((string)@$_GET["fornecedor_id"]);
 $clienteId = trim((string)@$_GET["cliente_id"]);
+$campos = ['rua','numero','complemento','bairro','cep','cidade','estado'];
+$dados = ['rua' => $rua, 'numero' => $numero, 'complemento' => $complemento, 'bairro' => $bairro, 'cep' => $cep, 'cidade' => $cidade, 'estado' => $estado];
+
+if (!empty(camposObrigatorios($campos, $dados))) {
+    header("Location: " . BASE_URL . "/views/cadastro/form_endereco.php?erro=campos_obrigatorios");
+    exit;
+}
 
 if (($fornecedorId === "" && $clienteId === "") || ($fornecedorId !== "" && $clienteId !== "")) {
     header("Location: " . BASE_URL . "/views/cadastro/novo_endereco.php?erro=vinculo_invalido");

@@ -4,6 +4,27 @@ if (!defined('BASE_URL')) {
 }
 
 include_once dirname(__DIR__, 3) . "/routes/fachada.php";
+include_once dirname(__DIR__) . "/valida_campos.php";
+
+$campos = ['rua','numero','complemento','bairro','cep','cidade','estado','nome','descricao','telefone','email'];
+$dados = [
+    'rua' => trim((string)($_GET['rua'] ?? '')),
+    'numero' => trim((string)($_GET['numero'] ?? '')),
+    'complemento' => trim((string)($_GET['complemento'] ?? '')),
+    'bairro' => trim((string)($_GET['bairro'] ?? '')),
+    'cep' => trim((string)($_GET['cep'] ?? '')),
+    'cidade' => trim((string)($_GET['cidade'] ?? '')),
+    'estado' => trim((string)($_GET['estado'] ?? '')),
+    'nome' => trim((string)($_GET['nome'] ?? '')),
+    'descricao' => trim((string)($_GET['descricao'] ?? '')),
+    'telefone' => trim((string)($_GET['telefone'] ?? '')),
+    'email' => trim((string)($_GET['email'] ?? '')),
+];
+
+if (!empty(camposObrigatorios($campos, $dados))) {
+    header("Location: " . BASE_URL . "/views/cadastro/form_fornecedor.php?id=" . ($_GET['id'] ?? '') . "&erro=campos_obrigatorios");
+    exit;
+}
 
 $fornecedorDao = $factory->getFornecedorDao();
 $enderecoDao = $factory->getEnderecoDao();

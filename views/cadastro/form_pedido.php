@@ -16,6 +16,7 @@ if ($tipo !== 'admin' && $tipo !== 'fornecedor') {
 }
 
 $id     = isset($_GET['id']) ? (int)$_GET['id'] : null;
+$erro   = $_GET['erro'] ?? '';
 if ($tipo === 'fornecedor' && !$id) {
     header('Location: ' . BASE_URL . '/public/index.php');
     exit;
@@ -60,26 +61,33 @@ $clienteAtualId = $pedido && $pedido->getCliente() ? $pedido->getCliente()->getI
 $situacaoAtual  = $pedido ? $pedido->getSituacao() : 'NOVO';
 
 include_once dirname(__DIR__) . "/layout/layout_header.php";
+
+$erros = [
+    'campos_obrigatorios' => 'Preencha todos os campos obrigatórios.',
+];
+if ($erro && isset($erros[$erro])) {
+    echo "<div class='alert alert-danger'>" . $erros[$erro] . "</div>";
+}
 ?>
 <section>
 <form action="<?= $action ?>" method="<?= $method ?>">
     <table class='table table-hover table-responsive table-bordered'>
         <tr>
-            <td>Número</td>
+            <td>Número <span class="text-danger">*</span></td>
             <td><input type='text' name='numero' class='form-control'
                        value="<?= $pedido ? htmlspecialchars($pedido->getNumero()) : '' ?>"
-                       <?= $pedido ? 'readonly' : '' ?> /></td>
+                       <?= $pedido ? 'readonly' : '' ?> required /></td>
         </tr>
         <tr>
-            <td>Data Pedido</td>
+            <td>Data Pedido <span class="text-danger">*</span></td>
             <td><input type='date' name='data_pedido' class='form-control'
                        value="<?= $pedido ? htmlspecialchars($pedido->getDataPedido()) : date('Y-m-d') ?>"
-                       <?= $tipo === 'fornecedor' ? 'readonly' : '' ?> /></td>
+                       <?= $tipo === 'fornecedor' ? 'readonly' : '' ?> required /></td>
         </tr>
         <tr>
-            <td>Data Entrega</td>
+            <td>Data Entrega <span class="text-danger">*</span></td>
             <td><input type='date' name='data_entrega' id='data_entrega' class='form-control'
-                       value="<?= $pedido ? htmlspecialchars($pedido->getDataEntrega()) : '' ?>" /></td>
+                       value="<?= $pedido ? htmlspecialchars($pedido->getDataEntrega()) : '' ?>" required /></td>
         </tr>
         <tr id="row-data-cancelamento" style="display:<?= $situacaoAtual === 'CANCELADO' ? 'table-row' : 'none' ?>">
             <td>Data Cancelamento</td>
@@ -87,9 +95,9 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
                        value="<?= ($pedido && $situacaoAtual === 'CANCELADO') ? htmlspecialchars($pedido->getDataEntrega()) : '' ?>" /></td>
         </tr>
         <tr>
-            <td>Situação</td>
+            <td>Situação <span class="text-danger">*</span></td>
             <td>
-                <select name='situacao' id='situacao' class='form-control'>
+                <select name='situacao' id='situacao' class='form-control' required>
                     <?php foreach (['NOVO', 'PREPARANDO PARA ENVIO', 'A CAMINHO', 'ENTREGUE', 'CANCELADO'] as $s): ?>
                         <option value='<?= $s ?>' <?= $situacaoAtual === $s ? 'selected' : '' ?>><?= $s ?></option>
                     <?php endforeach; ?>
@@ -97,13 +105,13 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
             </td>
         </tr>
         <tr>
-            <td>Cliente</td>
+            <td>Cliente <span class="text-danger">*</span></td>
             <td>
                 <?php if ($tipo === 'fornecedor'): ?>
                     <input type='hidden' name='cliente_id' value='<?= htmlspecialchars($clienteAtualId) ?>' />
                     <div class='form-control-static'><?= htmlspecialchars($pedido && $pedido->getCliente() ? $pedido->getCliente()->getNome() : 'Cliente não disponível') ?></div>
                 <?php else: ?>
-                    <select name='cliente_id' class='form-control'>
+                    <select name='cliente_id' class='form-control' required>
                         <option value=''>Selecione um cliente</option>
                         <?php foreach ($clientes as $cliente): ?>
                             <option value='<?= $cliente->getId() ?>'

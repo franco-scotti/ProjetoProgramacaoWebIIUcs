@@ -82,15 +82,15 @@ $erros = [
                            value="<?= $g('email') ?>" required />
                 </div>
                 <div class="form-group">
-                    <label>Telefone</label>
+                    <label>Telefone <span class="text-danger">*</span></label>
                     <input type="text" name="telefone" class="form-control"
-                           value="<?= $g('telefone') ?>" />
+                           value="<?= $g('telefone') ?>" required />
                 </div>
 
                 <?php if ($tipo === 'fornecedor'): ?>
                 <div class="form-group">
-                    <label>Descrição</label>
-                    <textarea name="descricao" class="form-control" rows="3"><?= $g('descricao') ?></textarea>
+                    <label>Descrição <span class="text-danger">*</span></label>
+                    <textarea name="descricao" class="form-control" rows="3" required><?= $g('descricao') ?></textarea>
                 </div>
                 <?php endif; ?>
             </div>
@@ -101,32 +101,32 @@ $erros = [
             <div class="panel-heading"><strong>Endereço</strong></div>
             <div class="panel-body row">
                 <div class="col-sm-8 form-group">
-                    <label>Rua</label>
-                    <input type="text" name="rua" class="form-control" value="<?= $g('rua') ?>" />
+                    <label>Rua <span class="text-danger">*</span></label>
+                    <input type="text" name="rua" class="form-control" value="<?= $g('rua') ?>" required />
                 </div>
                 <div class="col-sm-4 form-group">
-                    <label>Número</label>
-                    <input type="text" name="numero" class="form-control" value="<?= $g('numero') ?>" />
+                    <label>Número <span class="text-danger">*</span></label>
+                    <input type="text" name="numero" class="form-control" value="<?= $g('numero') ?>" required />
                 </div>
                 <div class="col-sm-6 form-group">
-                    <label>Complemento</label>
-                    <input type="text" name="complemento" class="form-control" value="<?= $g('complemento') ?>" />
+                    <label>Complemento <span class="text-danger">*</span></label>
+                    <input type="text" name="complemento" class="form-control" value="<?= $g('complemento') ?>" required />
                 </div>
                 <div class="col-sm-6 form-group">
-                    <label>Bairro</label>
-                    <input type="text" name="bairro" class="form-control" value="<?= $g('bairro') ?>" />
+                    <label>Bairro <span class="text-danger">*</span></label>
+                    <input type="text" name="bairro" class="form-control" value="<?= $g('bairro') ?>" required />
                 </div>
                 <div class="col-sm-3 form-group">
-                    <label>CEP</label>
-                    <input type="text" name="cep" class="form-control" value="<?= $g('cep') ?>" />
+                    <label>CEP <span class="text-danger">*</span></label>
+                    <input type="text" name="cep" class="form-control" value="<?= $g('cep') ?>" required />
                 </div>
                 <div class="col-sm-6 form-group">
-                    <label>Cidade</label>
-                    <input type="text" name="cidade" class="form-control" value="<?= $g('cidade') ?>" />
+                    <label>Cidade <span class="text-danger">*</span></label>
+                    <input type="text" name="cidade" class="form-control" value="<?= $g('cidade') ?>" required />
                 </div>
                 <div class="col-sm-3 form-group">
-                    <label>Estado</label>
-                    <input type="text" name="estado" class="form-control" value="<?= $g('estado') ?>" />
+                    <label>Estado <span class="text-danger">*</span></label>
+                    <input type="text" name="estado" class="form-control" value="<?= $g('estado') ?>" required />
                 </div>
             </div>
         </div>

@@ -44,17 +44,17 @@ if ($erro && isset($erros[$erro])) {
 <form action="<?= $action ?>" method="get">
     <table class='table table-hover table-responsive table-bordered'>
         <tr>
-            <td>Login</td>
+            <td>Login <span class="text-danger">*</span></td>
             <td><input type='text' name='login' class='form-control'
                        value="<?= $usuario ? htmlspecialchars($usuario->getLogin()) : '' ?>" required /></td>
         </tr>
         <tr>
-            <td>Senha</td>
+            <td>Senha <span class="text-danger">*</span></td>
             <td><input type='password' name='senha' class='form-control'
-                       value="<?= $usuario ? htmlspecialchars($usuario->getSenha()) : '' ?>" /></td>
+                       value="<?= $usuario ? htmlspecialchars($usuario->getSenha()) : '' ?>" required /></td>
         </tr>
         <tr>
-            <td>Nome</td>
+            <td>Nome <span class="text-danger">*</span></td>
             <td><input type='text' name='nome' class='form-control'
                        value="<?= $usuario ? htmlspecialchars($usuario->getNome()) : '' ?>" required /></td>
         </tr>

@@ -17,7 +17,12 @@ if ($fornecedor && $fornecedor->getEndereco()) {
     $enderecoId = $fornecedor->getEndereco()->getId();
 }
 
-$fornecedorDao->removePorId($id);
+$removido = $fornecedorDao->removePorId($id);
+
+if (!$removido) {
+    header("Location: " . BASE_URL . "/views/listagem/lista_fornecedores.php?erro=dependencia");
+    exit;
+}
 
 if ($enderecoId) {
     $enderecoDao->removePorId($enderecoId);

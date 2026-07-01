@@ -18,6 +18,7 @@ if (!$isAdmin && !$isFornecedor) {
 }
 
 $id      = isset($_GET['id']) ? (int)$_GET['id'] : null;
+$erro    = $_GET['erro'] ?? '';
 $estoque = null;
 
 $estoqueDao = $factory->getEstoqueDao();
@@ -52,12 +53,19 @@ $produtos = ($fornecedorId !== null)
 $produtoAtualId = $estoque && $estoque->getProduto() ? $estoque->getProduto()->getId() : '';
 
 include_once dirname(__DIR__) . "/layout/layout_header.php";
+
+$erros = [
+    'campos_obrigatorios' => 'Preencha todos os campos obrigatórios.',
+];
+if ($erro && isset($erros[$erro])) {
+    echo "<div class='alert alert-danger'>" . $erros[$erro] . "</div>";
+}
 ?>
 <section>
 <form action="<?= $action ?>" method="get">
     <table class='table table-hover table-responsive table-bordered'>
         <tr>
-            <td>Produto</td>
+            <td>Produto <span class="text-danger">*</span></td>
             <td>
                 <?php if ($isFornecedor && $id): ?>
                     <!-- Fornecedor não troca o produto na edição -->
@@ -66,7 +74,7 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
                         <?= $estoque->getProduto() ? htmlspecialchars($estoque->getProduto()->getNome()) : '—' ?>
                     </span>
                 <?php else: ?>
-                    <select name="produto_id" class="form-control">
+                    <select name="produto_id" class="form-control" required>
                         <option value="">Selecione um produto</option>
                         <?php foreach ($produtos as $produto): ?>
                             <option value="<?= $produto->getId() ?>"
@@ -79,13 +87,13 @@ include_once dirname(__DIR__) . "/layout/layout_header.php";
             </td>
         </tr>
         <tr>
-            <td>Quantidade</td>
-            <td><input type='number' name='quantidade' min='0' class='form-control'
+            <td>Quantidade <span class="text-danger">*</span></td>
+            <td><input type='number' name='quantidade' min='0' class='form-control' required
                        value="<?= $estoque ? $estoque->getQuantidade() : '' ?>" /></td>
         </tr>
         <tr>
-            <td>Preço</td>
-            <td><input type='text' name='preco' class='form-control'
+            <td>Preço <span class="text-danger">*</span></td>
+            <td><input type='text' name='preco' class='form-control' required
                        value="<?= $estoque ? $estoque->getPreco() : '' ?>" /></td>
         </tr>
         <tr>
