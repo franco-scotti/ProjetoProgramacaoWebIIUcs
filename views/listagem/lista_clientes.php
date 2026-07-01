@@ -20,6 +20,7 @@ if ($erro === 'dependencia') {
 }
 
 echo "<section>";
+echo "<h2>Clientes</h2>";
 
 $dao = $factory->getClienteDao();
 $clientes = $dao->buscaTodos();

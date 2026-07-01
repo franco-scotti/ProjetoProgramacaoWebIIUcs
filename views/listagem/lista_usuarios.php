@@ -83,6 +83,7 @@ $offset = ($paginaAtual - 1) * $itensPorPagina;
 $usuarios = $dao->buscaTodos($itensPorPagina, $offset);
 
 echo "<section>";
+echo "<h2>Usuários</h2>";
 echo "<input type='text' id='pesquisaUsuario' class='form-control' placeholder='Buscar por código, login ou nome'>";
 echo "<br>";
 

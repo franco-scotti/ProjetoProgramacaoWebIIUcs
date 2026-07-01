@@ -52,6 +52,7 @@ if ($erro === 'dependencia') {
 }
 
 echo "<section>";
+echo "<h2>Fornecedores</h2>";
 
 $itensPorPagina = 10;
 $paginaAtual    = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
