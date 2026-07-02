@@ -124,7 +124,6 @@ if ($isAdmin) {
                     echo "<a href='{$portalLink}' class='{$classeAtiva}'>{$portalLabel}</a>";
                 }
 
-                // Usuários só visível para admin
                 if ($isAdmin) {
                     $classeAtiva = $paginaAtual === 'lista_usuarios.php' ? 'nav-link nav-link-secondary is-active' : 'nav-link nav-link-secondary';
                     echo "<a href='" . BASE_URL . "/views/listagem/lista_usuarios.php' class='{$classeAtiva}'>Usuários</a>";

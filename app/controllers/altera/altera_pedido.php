@@ -21,9 +21,11 @@ $clienteId  = trim((string)($_POST['cliente_id'] ?? ''));
 $campos = ['situacao','cliente_id'];
 $dados = ['situacao' => $situacao, 'cliente_id' => $clienteId];
 
-if (!empty(camposObrigatorios($campos, $dados))) {
-    header('Location: ' . BASE_URL . '/views/cadastro/form_pedido.php?id=' . $id . '&erro=campos_obrigatorios');
-    exit;
+if (!($tipo === 'fornecedor' && $situacao === 'CANCELADO')) {
+    if (!empty(camposObrigatorios($campos, $dados))) {
+        header('Location: ' . BASE_URL . '/views/cadastro/form_pedido.php?id=' . $id . '&erro=campos_obrigatorios');
+        exit;
+    }
 }
 
 $pedidoOriginal = $factory->getPedidoDao()->buscaPorId($id);

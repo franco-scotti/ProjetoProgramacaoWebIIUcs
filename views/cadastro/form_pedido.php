@@ -59,6 +59,7 @@ if ($id) {
 
 $clienteAtualId = $pedido && $pedido->getCliente() ? $pedido->getCliente()->getId() : '';
 $situacaoAtual  = $pedido ? $pedido->getSituacao() : 'NOVO';
+$isFornecedor   = ($tipo === 'fornecedor');
 
 include_once dirname(__DIR__) . "/layout/layout_header.php";
 
@@ -87,7 +88,8 @@ if ($erro && isset($erros[$erro])) {
         <tr>
             <td>Data Entrega <span class="text-danger">*</span></td>
             <td><input type='date' name='data_entrega' id='data_entrega' class='form-control'
-                       value="<?= $pedido ? htmlspecialchars($pedido->getDataEntrega()) : '' ?>" required /></td>
+                       value="<?= $pedido ? htmlspecialchars($pedido->getDataEntrega()) : '' ?>"
+                       <?= ($isFornecedor && $situacaoAtual === 'CANCELADO') ? '' : 'required' ?> /></td>
         </tr>
         <tr id="row-data-cancelamento" style="display:<?= $situacaoAtual === 'CANCELADO' ? 'table-row' : 'none' ?>">
             <td>Data Cancelamento</td>
@@ -141,9 +143,18 @@ if ($erro && isset($erros[$erro])) {
 document.getElementById('situacao').addEventListener('change', function () {
     var s = this.value;
     var today = new Date().toISOString().split('T')[0];
-    document.getElementById('row-data-cancelamento').style.display = (s === 'CANCELADO') ? 'table-row' : 'none';
-    if (s === 'ENTREGUE') { var de = document.getElementById('data_entrega'); if (!de.value) de.value = today; }
-    if (s === 'CANCELADO') { var dc = document.getElementById('data_cancelamento'); if (!dc.value) dc.value = today; }
+    var rowCancelamento = document.getElementById('row-data-cancelamento');
+    var de = document.getElementById('data_entrega');
+    var dc = document.getElementById('data_cancelamento');
+
+    rowCancelamento.style.display = (s === 'CANCELADO') ? 'table-row' : 'none';
+    if (de) de.required = (s !== 'CANCELADO');
+    if (s === 'ENTREGUE') {
+        if (de && !de.value) de.value = today;
+    }
+    if (s === 'CANCELADO') {
+        if (dc && !dc.value) dc.value = today;
+    }
 });
 </script>
 
