@@ -109,4 +109,61 @@ if ($erro && isset($erros[$erro])) {
     </table>
 </form>
 </section>
+<script>
+(function(){
+    var preco = document.querySelector('input[name="preco"]');
+    if (!preco) return;
+
+    // Prevent typing commas or other non-digit/dot characters
+    preco.addEventListener('keydown', function(e){
+        var allowed = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Enter'];
+        if (allowed.indexOf(e.key) !== -1) return;
+        if (e.key === ',') { e.preventDefault(); return; }
+        if (e.key === '.') {
+            if (this.value.indexOf('.') !== -1) e.preventDefault();
+            return;
+        }
+        if (!/^\d$/.test(e.key)) e.preventDefault();
+    });
+
+    // Clean pasted content
+    preco.addEventListener('paste', function(e){
+        var paste = (e.clipboardData || window.clipboardData).getData('text');
+        if (!/^[0-9.]+$/.test(paste) || (paste.match(/\./g) || []).length > 1) {
+            e.preventDefault();
+        }
+    });
+
+    // Keep only digits and a single dot while typing
+    preco.addEventListener('input', function(){
+        var v = this.value;
+        v = v.replace(/[^0-9.]/g, '');
+        var parts = v.split('.');
+        if (parts.length > 2) {
+            v = parts.shift() + '.' + parts.join('');
+        }
+        this.value = v;
+    });
+
+    // On blur, format to two decimals using dot as decimal separator
+    preco.addEventListener('blur', function(){
+        var v = this.value.trim();
+        if (v === '') return;
+        // Ensure only one dot and valid numeric string
+        v = v.replace(/,/g, '.');
+        v = v.replace(/[^0-9.]/g, '');
+        var parts = v.split('.');
+        var intPart = parts.shift() || '0';
+        var decPart = parts.join('').slice(0,2);
+        var combined = intPart + (decPart !== '' ? '.' + decPart : '');
+        var n = parseFloat(combined);
+        if (isNaN(n)) {
+            this.value = '';
+        } else {
+            this.value = n.toFixed(2);
+        }
+    });
+
+})();
+</script>
 <?php include_once dirname(__DIR__) . "/layout/layout_footer.php"; ?>
