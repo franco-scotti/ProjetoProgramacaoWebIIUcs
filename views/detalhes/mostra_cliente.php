@@ -33,7 +33,6 @@ if($cliente) {
 
     echo "<p>Cartao : " . $cliente->getCartaoCredito() . "</p>";
 
-    // BLOCO ENDEREÇO
     if ($endereco) {
 
         echo "<hr>";

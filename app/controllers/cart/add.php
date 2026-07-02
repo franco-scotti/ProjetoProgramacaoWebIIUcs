@@ -18,7 +18,6 @@ $referer = $_SERVER['HTTP_REFERER'] ?? BASE_URL . '/public/catalogo.php';
 if ($produtoId > 0) {
     $produto = $factory->getProdutoDao()->buscaPorId($produtoId);
 
-    // Busca estoque e preço do produto
     $preco = 0.0;
     $estoqueTotal = 0;
     foreach ($factory->getEstoqueDao()->buscaTodos() as $e) {
@@ -29,22 +28,18 @@ if ($produtoId > 0) {
         }
     }
 
-    // Quanto já está no carrinho para esse produto
     $noCarrinho = 0;
     if (isset($_SESSION['cart'][$produtoId])) {
         $noCarrinho = (int)$_SESSION['cart'][$produtoId]['quantidade'];
     }
 
-    // Estoque disponível real
     $estoqueDisponivel = max(0, $estoqueTotal - $noCarrinho);
 
-    // Se não há nada disponível, ignora a adição
     if ($estoqueDisponivel <= 0) {
         header('Location: ' . $referer);
         exit;
     }
 
-    // Limita a quantidade solicitada ao que ainda está disponível
     $quantidade = min($quantidade, $estoqueDisponivel);
 
     if (!isset($_SESSION['cart'])) {

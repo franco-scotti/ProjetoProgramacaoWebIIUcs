@@ -54,11 +54,9 @@ if ($tipo === 'fornecedor' && $fornecedorId !== null) {
     $dataPedido = trim((string)($_POST['data_pedido']?? ''));
 }
 
-// Situações válidas
 $situacoesValidas = ['NOVO', 'PREPARANDO PARA ENVIO', 'A CAMINHO', 'ENTREGUE', 'CANCELADO'];
 if (!in_array($situacao, $situacoesValidas)) $situacao = 'NOVO';
 
-// Data de entrega: vem do campo data_entrega (entregue) ou data_cancelamento (cancelado)
 $dataEntrega = '';
 if ($situacao === 'ENTREGUE') {
     $dataEntrega = trim((string)($_POST['data_entrega'] ?? ''));

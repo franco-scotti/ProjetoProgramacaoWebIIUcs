@@ -12,7 +12,6 @@ $fornecedorId = isset($_SESSION['usuario_fornecedor_id']) && $_SESSION['usuario_
                 : null;
 $isAdmin      = ($tipo === 'admin');
 
-// Somente admin ou fornecedor podem acessar
 if (!$isAdmin && $tipo !== 'fornecedor') {
     header('Location: ' . BASE_URL . '/public/index.php');
     exit;
@@ -21,7 +20,7 @@ if (!$isAdmin && $tipo !== 'fornecedor') {
 $id         = isset($_GET['id']) ? (int)$_GET['id'] : null;
 $erro       = $_GET['erro'] ?? '';
 $produto    = null;
-$prodFornId = $fornecedorId; // fornecedor vinculado ao produto (default = logado)
+$prodFornId = $fornecedorId;
 
 $produtoDao    = $factory->getProdutoDao();
 $fornecedorDao = $factory->getFornecedorDao();
@@ -48,7 +47,6 @@ if ($id) {
     $textoBotao = "Inserir";
 }
 
-// Admin carrega todos os fornecedores; fornecedor não precisa da lista
 $fornecedores = $isAdmin ? $fornecedorDao->buscaTodos() : [];
 
 include_once dirname(__DIR__) . "/layout/layout_header.php";
@@ -115,7 +113,6 @@ if ($erro && isset($erros[$erro])) {
                         </select>
 
                     <?php else: ?>
-                        <!-- Fornecedor logado: campo oculto + texto informativo -->
                         <input type="hidden" name="fornecedor_id" value="<?= $fornecedorId ?>">
                         <span class="form-control" style="background:#f5f5f5;cursor:default">
                             <?php

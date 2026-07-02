@@ -183,7 +183,6 @@ class PostgresProdutoDao extends PostgresDao implements ProdutoDao {
         return (int)$stmt->fetchColumn();
     }
 
-    // --- helpers internos ---
 
     private function baseSelect() {
         return "SELECT
@@ -222,7 +221,6 @@ class PostgresProdutoDao extends PostgresDao implements ProdutoDao {
         return $produtos;
     }
 
-    // --- filtro por fornecedor ---
 
     public function buscaPorFornecedorId($fornecedorId, $limit = null, $offset = null) {
         $query = $this->baseSelect() .

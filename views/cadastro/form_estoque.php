@@ -30,7 +30,6 @@ if ($id) {
     $action     = BASE_URL . "/app/controllers/altera/altera_estoque.php";
     $textoBotao = "Alterar";
 
-    // Fornecedor só pode editar estoque dos seus produtos
     if ($isFornecedor && $estoque && $estoque->getProduto()) {
         $prodCompleto = $produtoDao->buscaPorId($estoque->getProduto()->getId());
         if (!$prodCompleto || $prodCompleto->getFornecedor() === null
@@ -45,7 +44,6 @@ if ($id) {
     $textoBotao = "Inserir";
 }
 
-// Lista de produtos: fornecedor vê apenas os seus
 $produtos = ($fornecedorId !== null)
     ? $produtoDao->buscaPorFornecedorId($fornecedorId)
     : $produtoDao->buscaTodos();
@@ -114,7 +112,6 @@ if ($erro && isset($erros[$erro])) {
     var preco = document.querySelector('input[name="preco"]');
     if (!preco) return;
 
-    // Prevent typing commas or other non-digit/dot characters
     preco.addEventListener('keydown', function(e){
         var allowed = ['Backspace','Tab','ArrowLeft','ArrowRight','Delete','Enter'];
         if (allowed.indexOf(e.key) !== -1) return;
@@ -126,7 +123,6 @@ if ($erro && isset($erros[$erro])) {
         if (!/^\d$/.test(e.key)) e.preventDefault();
     });
 
-    // Clean pasted content
     preco.addEventListener('paste', function(e){
         var paste = (e.clipboardData || window.clipboardData).getData('text');
         if (!/^[0-9.]+$/.test(paste) || (paste.match(/\./g) || []).length > 1) {
@@ -134,7 +130,6 @@ if ($erro && isset($erros[$erro])) {
         }
     });
 
-    // Keep only digits and a single dot while typing
     preco.addEventListener('input', function(){
         var v = this.value;
         v = v.replace(/[^0-9.]/g, '');
@@ -145,7 +140,6 @@ if ($erro && isset($erros[$erro])) {
         this.value = v;
     });
 
-    // On blur, format to two decimals using dot as decimal separator
     preco.addEventListener('blur', function(){
         var v = this.value.trim();
         if (v === '') return;

@@ -76,7 +76,6 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     ];
 }
 
-// Todas as fotos para o carrossel (apenas na página 1)
 $fotos = [];
 if ($paginaAtual === 1) {
     $stmtF = $pdo->prepare(

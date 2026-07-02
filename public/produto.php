@@ -37,7 +37,6 @@ if ($id) {
         }
     }
 
-    // Desconta o que já está no carrinho deste produto
     $noCarrinho = 0;
     if (!empty($_SESSION['cart'][$id])) {
         $noCarrinho = (int)$_SESSION['cart'][$id]['quantidade'];

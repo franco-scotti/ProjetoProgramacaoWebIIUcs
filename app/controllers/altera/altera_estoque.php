@@ -8,7 +8,6 @@ include_once dirname(__DIR__) . "/valida_campos.php";
 
 if (is_session_started() === FALSE) session_start();
 
-// Requer login com permissão de estoque
 $tipo = $_SESSION['usuario_tipo'] ?? '';
 if (!in_array($tipo, ['admin', 'fornecedor'])) {
     header('Location: ' . BASE_URL . '/public/index.php');
@@ -27,7 +26,6 @@ if (!empty(camposObrigatorios($campos, $dados))) {
     exit;
 }
 
-// Fornecedor: verifica se o estoque pertence a um produto seu
 if ($tipo === 'fornecedor') {
     $fornecedorId = (int)($_SESSION['usuario_fornecedor_id'] ?? 0);
     $estoqueAtual = $factory->getEstoqueDao()->buscaPorId($id);
@@ -37,7 +35,6 @@ if ($tipo === 'fornecedor') {
         exit;
     }
 
-    // Confere se o produto do estoque pertence ao fornecedor logado
     $produtoCompleto = $factory->getProdutoDao()->buscaPorId($estoqueAtual->getProduto()->getId());
     if (!$produtoCompleto || $produtoCompleto->getFornecedor() === null
         || $produtoCompleto->getFornecedor()->getId() != $fornecedorId) {
@@ -45,7 +42,6 @@ if ($tipo === 'fornecedor') {
         exit;
     }
 
-    // Fornecedor não pode alterar o produto vinculado, apenas quantidade e preço
     $produtoId = (string)$estoqueAtual->getProduto()->getId();
 }
 

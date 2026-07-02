@@ -34,7 +34,6 @@ $menuPrincipal = [
 ];
 
 if ($isAdmin ) {
-    // Admin e fornecedor veem a gestão completa
     $menuPrincipal['/ProjetoProgramacaoWebIIUcs/public/index.php']                      = 'Home';
     $menuPrincipal['/ProjetoProgramacaoWebIIUcs/views/listagem/lista_produtos.php']    = 'Produtos';
     $menuPrincipal['/ProjetoProgramacaoWebIIUcs/views/listagem/lista_pedidos.php']     = 'Pedidos';
@@ -42,7 +41,6 @@ if ($isAdmin ) {
     $menuPrincipal['/ProjetoProgramacaoWebIIUcs/views/listagem/lista_fornecedores.php']= 'Fornecedores';
     $menuPrincipal['/ProjetoProgramacaoWebIIUcs/views/listagem/lista_estoques.php']    = 'Estoque';
 }elseif($isFornecedor) {
-    // Fornecedores veem apenas seus produtos
     $menuPrincipal['/ProjetoProgramacaoWebIIUcs/views/listagem/lista_produtos.php'] = 'Meus Produtos';
     $menuPrincipal['/ProjetoProgramacaoWebIIUcs/views/listagem/lista_pedidos.php'] = 'Meus Pedidos';
     $menuPrincipal['/ProjetoProgramacaoWebIIUcs/views/listagem/lista_estoques.php']    = 'Estoque';

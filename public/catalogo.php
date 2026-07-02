@@ -30,7 +30,6 @@ $produtos = $search !== ''
     ? $produtoDao->buscaPorCodigoNome($search)
     : $produtoDao->buscaTodos(100, 0);
 
-// Monta mapa produto_id → estoque
 $estoques = [];
 foreach ($estoqueDao->buscaTodos() as $e) {
     if ($e->getProduto()) {
@@ -38,7 +37,6 @@ foreach ($estoqueDao->buscaTodos() as $e) {
     }
 }
 
-// Quantidade já reservada no carrinho por produto
 $cartQtd = [];
 if (!empty($_SESSION['cart'])) {
     foreach ($_SESSION['cart'] as $item) {
@@ -72,7 +70,6 @@ include_once dirname(__DIR__) . "/views/layout/layout_header.php";
                 $estoque  = $estoques[$id] ?? null;
                 $preco    = $estoque ? number_format($estoque->getPreco(), 2, ',', '.') : '0,00';
 
-                // Estoque real menos o que já está no carrinho
                 $estoqueTotal    = $estoque ? (int)$estoque->getQuantidade() : 0;
                 $noCarrinho      = $cartQtd[$id] ?? 0;
                 $estoqueDisponivel = max(0, $estoqueTotal - $noCarrinho);

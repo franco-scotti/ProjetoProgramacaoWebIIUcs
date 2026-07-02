@@ -1,5 +1,4 @@
 <?php
-// Endpoint AJAX — retorna o total do carrinho em JSON
 if (!defined('BASE_URL')) {
     define('BASE_URL', '/ProjetoProgramacaoWebIIUcs');
 }

@@ -7,7 +7,6 @@ if (!defined('BASE_URL')) {
 include_once dirname(__DIR__) . "/routes/fachada.php";
 include_once dirname(__DIR__) . "/views/layout/layout_header.php";
 
-// Redireciona quem já está logado
 if (isset($_SESSION['id_usuario'])) {
     header('Location: ' . BASE_URL . '/public/index.php');
     exit;

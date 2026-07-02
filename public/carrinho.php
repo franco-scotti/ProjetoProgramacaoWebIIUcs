@@ -80,7 +80,6 @@ $cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : array();
         xhr.send();
     }
 
-    // Chama ao carregar a página
     fetchTotal();
 }());
 </script>

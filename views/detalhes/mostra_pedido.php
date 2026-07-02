@@ -56,18 +56,7 @@ $badge       = ['NOVO' => 'info', 'PREPARANDO PARA ENVIO' => 'warning', 'A CAMIN
     </div>
 </div>
 
-<!-- CARROSSEL DE FOTOS -->
-<div id="carrossel-box" style="display:none;margin-bottom:24px">
-    <h4>Fotos dos itens</h4>
-    <div id="carrossel" style="position:relative;overflow:hidden;width:100%;background:#f5f5f5;border-radius:6px;padding:8px">
-        <div id="carrossel-slides" style="display:flex;transition:transform .35s ease;width:100%"></div>
-        <div style="text-align:center;margin-top:8px">
-            <button id="prev-slide" class="btn btn-default btn-sm">&#8592; Anterior</button>
-            <span id="slide-counter" style="margin:0 10px"></span>
-            <button id="next-slide" class="btn btn-default btn-sm">Próximo &#8594;</button>
-        </div>
-    </div>
-</div>
+<!-- Fotos dos itens exibidas na própria listagem; carrossel removido -->
 
 <!-- DETALHE (itens via AJAX) -->
 <h4>Itens do Pedido</h4>
@@ -76,7 +65,6 @@ $badge       = ['NOVO' => 'info', 'PREPARANDO PARA ENVIO' => 'warning', 'A CAMIN
 <table class="table table-bordered" id="itens-table" style="display:none">
     <thead>
         <tr>
-            <th style="width:80px">Foto</th>
             <th>Produto</th>
             <th>Descrição</th>
             <th>Qtd</th>
@@ -104,8 +92,6 @@ var PEDIDO_ID  = <?= $pedido->getId() ?>;
 var BASE_URL   = '<?= BASE_URL ?>';
 var paginaAtual = 1;
 var totalPaginas = 1;
-var slideAtual  = 0;
-var todasFotos  = [];
 
 function carregaItens(pagina) {
     var xhr = new XMLHttpRequest();
@@ -117,28 +103,17 @@ function carregaItens(pagina) {
         paginaAtual  = d.pagina_atual;
         totalPaginas = d.total_paginas;
 
-        // Total e rótulo
         document.getElementById('total-pedido').textContent = d.total_fmt;
         if (d.total_label) {
             document.getElementById('total-pedido-label').textContent = d.total_label;
         }
 
-        // Carrossel (só na primeira carga)
-        if (pagina === 1 && d.fotos && d.fotos.length > 0) {
-            todasFotos = d.fotos;
-            renderCarrossel();
-        }
 
-        // Linhas da tabela
         var tbody = document.getElementById('itens-body');
         tbody.innerHTML = '';
         d.itens.forEach(function (item) {
-            var img = item.foto
-                ? '<img src="' + item.foto + '" style="max-width:70px;max-height:70px;object-fit:cover;border-radius:4px">'
-                : '<span style="color:#bbb">Sem foto</span>';
             tbody.innerHTML +=
                 '<tr>' +
-                '<td>' + img + '</td>' +
                 '<td>' + escHtml(item.produto_nome) + '</td>' +
                 '<td>' + escHtml(item.produto_descricao) + '</td>' +
                 '<td>' + item.quantidade + '</td>' +
@@ -150,7 +125,6 @@ function carregaItens(pagina) {
         document.getElementById('itens-loading').style.display = 'none';
         document.getElementById('itens-table').style.display   = '';
 
-        // Paginação
         var pag = document.getElementById('itens-paginacao');
         pag.innerHTML = '';
         if (totalPaginas > 1) {
@@ -174,44 +148,12 @@ function carregaItens(pagina) {
     xhr.send();
 }
 
-function renderCarrossel() {
-    var box    = document.getElementById('carrossel-box');
-    var slides = document.getElementById('carrossel-slides');
-    slides.innerHTML = '';
-    todasFotos.forEach(function (f) {
-        var div = document.createElement('div');
-        div.style.cssText = 'min-width:100%;text-align:center;padding:4px';
-        div.innerHTML = '<img src="' + f.src + '" alt="' + escHtml(f.nome)
-            + '" style="max-height:260px;max-width:100%;object-fit:contain;border-radius:6px">'
-            + '<p style="margin-top:6px;font-weight:600">' + escHtml(f.nome) + '</p>';
-        slides.appendChild(div);
-    });
-    atualizaSlide();
-    box.style.display = '';
-}
-
-function atualizaSlide() {
-    document.getElementById('carrossel-slides').style.transform =
-        'translateX(-' + (slideAtual * 100) + '%)';
-    document.getElementById('slide-counter').textContent =
-        (slideAtual + 1) + ' / ' + todasFotos.length;
-}
-
-document.getElementById('prev-slide').addEventListener('click', function () {
-    slideAtual = (slideAtual - 1 + todasFotos.length) % todasFotos.length;
-    atualizaSlide();
-});
-document.getElementById('next-slide').addEventListener('click', function () {
-    slideAtual = (slideAtual + 1) % todasFotos.length;
-    atualizaSlide();
-});
 
 function escHtml(s) {
     if (!s) return '';
     return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// Inicia
 carregaItens(1);
 </script>
 

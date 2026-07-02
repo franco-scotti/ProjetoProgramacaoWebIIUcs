@@ -30,7 +30,6 @@ if (!empty(camposObrigatorios($campos, $dados))) {
     exit;
 }
 
-// Fornecedor_id: se logado como fornecedor, ignora o POST e usa a sessão
 if ($fornecedorId !== null) {
     $fId = $fornecedorId;
 } else {
@@ -38,7 +37,6 @@ if ($fornecedorId !== null) {
     $fId = $fId !== '' ? (int)$fId : null;
 }
 
-// Foto
 $fotoData = null;
 if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
     $fotoData = base64_encode(file_get_contents($_FILES['foto']['tmp_name']));

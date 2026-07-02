@@ -31,7 +31,6 @@ if (!empty(camposObrigatorios($campos, $dados))) {
     exit;
 }
 
-// Carrega produto atual para validar posse e manter foto se não enviada nova
 $dao            = $factory->getProdutoDao();
 $produtoAtual   = $dao->buscaPorId($id);
 
@@ -40,7 +39,6 @@ if (!$produtoAtual) {
     exit;
 }
 
-// Fornecedor não pode alterar produto de outro fornecedor
 if (!$isAdmin && $fornecedorId !== null) {
     $prodFornId = $produtoAtual->getFornecedor() ? (int)$produtoAtual->getFornecedor()->getId() : null;
     if ($prodFornId !== $fornecedorId) {
@@ -49,7 +47,6 @@ if (!$isAdmin && $fornecedorId !== null) {
     }
 }
 
-// Fornecedor_id: fornecedor logado sempre mantém o seu; admin pode trocar
 if ($fornecedorId !== null) {
     $fId = $fornecedorId;
 } else {
@@ -57,7 +54,6 @@ if ($fornecedorId !== null) {
     $fId = $fId !== '' ? (int)$fId : null;
 }
 
-// Foto: usa nova se enviada, senão mantém a existente
 $fotoData = null;
 if (isset($_FILES['foto']) && $_FILES['foto']['error'] === UPLOAD_ERR_OK) {
     $fotoData = base64_encode(file_get_contents($_FILES['foto']['tmp_name']));

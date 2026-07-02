@@ -6,7 +6,6 @@ if (!defined('BASE_URL')) {
 include_once dirname(__DIR__, 2) . "/routes/fachada.php";
 include_once dirname(__DIR__, 2) . "/app/controllers/login/verifica.php";
 
-// Apenas admin gerencia usuários
 if (($_SESSION['usuario_tipo'] ?? '') !== 'admin') {
     header('Location: ' . BASE_URL . '/public/index.php');
     exit;

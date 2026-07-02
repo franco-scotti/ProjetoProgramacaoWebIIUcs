@@ -9,13 +9,11 @@ if (is_session_started() === FALSE) {
     session_start();
 }
 
-// Já logado → sem necessidade de cadastro
 if (isset($_SESSION['id_usuario'])) {
     header('Location: ' . BASE_URL . '/public/index.php');
     exit;
 }
 
-// --- Coleta e sanitiza campos ---
 $tipo        = (isset($_POST['tipo']) && $_POST['tipo'] === 'fornecedor') ? 'fornecedor' : 'cliente';
 $login       = trim((string)($_POST['login']         ?? ''));
 $senha       = trim((string)($_POST['senha']         ?? ''));
@@ -23,7 +21,7 @@ $senhaConf   = trim((string)($_POST['senha_confirma']?? ''));
 $nome        = trim((string)($_POST['nome']          ?? ''));
 $email       = trim((string)($_POST['email']         ?? ''));
 $telefone    = trim((string)($_POST['telefone']      ?? ''));
-$descricao   = trim((string)($_POST['descricao']     ?? ''));  // fornecedor
+$descricao   = trim((string)($_POST['descricao']     ?? ''));
 $rua         = trim((string)($_POST['rua']           ?? ''));
 $numero      = trim((string)($_POST['numero']        ?? ''));
 $complemento = trim((string)($_POST['complemento']   ?? ''));
@@ -32,7 +30,6 @@ $cep         = trim((string)($_POST['cep']           ?? ''));
 $cidade      = trim((string)($_POST['cidade']        ?? ''));
 $estado      = trim((string)($_POST['estado']        ?? ''));
 
-// URL de retorno com valores preenchidos para reexibir o form em caso de erro
 $retorno = BASE_URL . '/public/cadastro.php?tipo=' . $tipo
     . '&login='   . urlencode($login)
     . '&nome='    . urlencode($nome)
@@ -47,7 +44,6 @@ $retorno = BASE_URL . '/public/cadastro.php?tipo=' . $tipo
     . '&cidade='  . urlencode($cidade)
     . '&estado='  . urlencode($estado);
 
-// --- Validações ---
 if ($login === '' || $senha === '' || $nome === '' || $email === '') {
     header('Location: ' . $retorno . '&erro=campos_obrigatorios');
     exit;
@@ -65,12 +61,10 @@ if ($usuarioDao->buscaPorLogin($login) !== null) {
     exit;
 }
 
-// --- Inicia transação ---
 $pdo = $factory->getConnection();
 try {
     $pdo->beginTransaction();
 
-    // 1. Cria o Usuário
     $novoUsuario = new Usuario(null, $login, $senha, $nome, false);
     $stmtU = $pdo->prepare(
         "INSERT INTO usuario (login, senha, nome, admin) VALUES (:login, :senha, :nome, :admin) RETURNING id"
@@ -83,7 +77,6 @@ try {
     $rowU     = $stmtU->fetch(PDO::FETCH_ASSOC);
     $usuarioId = (int)$rowU['id'];
 
-    // 2. Cria o Endereço (se informado)
     $enderecoId = null;
     if ($rua !== '' || $cidade !== '' || $cep !== '') {
         $stmtE = $pdo->prepare(
@@ -102,7 +95,6 @@ try {
         $enderecoId = (int)$rowE['id'];
     }
 
-    // 3. Cria Cliente ou Fornecedor vinculado ao usuário
     $vinculoId = null;
     if ($tipo === 'cliente') {
         $stmtC = $pdo->prepare(
@@ -135,14 +127,12 @@ try {
 
     $pdo->commit();
 
-    // --- Login automático ---
     $_SESSION['id_usuario']            = $usuarioId;
     $_SESSION['nome_usuario']          = $nome;
-    $_SESSION['usuario_tipo']          = $tipo;          // 'cliente' ou 'fornecedor'
+    $_SESSION['usuario_tipo']          = $tipo;
     $_SESSION['usuario_cliente_id']    = $tipo === 'cliente'    ? $vinculoId : null;
     $_SESSION['usuario_fornecedor_id'] = $tipo === 'fornecedor' ? $vinculoId : null;
 
-    // Redireciona para página adequada
     if ($tipo === 'cliente') {
         header('Location: ' . BASE_URL . '/public/meus_pedidos.php');
     } else {
