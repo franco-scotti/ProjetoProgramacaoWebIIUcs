@@ -3,4 +3,5 @@ RewriteEngine On
 RewriteBase /ProjetoProgramacaoWebIIUcs/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^pedido/([0-9]+)/?$ views/detalhes/mostra_pedido.php?id=$1 [L,QSA,NC]
+RewriteRule ^pedido/?$ api/pedidos.php [L,QSA,NC]
+RewriteRule ^pedido/([0-9]+)/?$ api/pedidos.php?id=$1 [L,QSA,NC]

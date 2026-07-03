@@ -13,7 +13,6 @@ $fornecedorId = isset($_SESSION['usuario_fornecedor_id']) && $_SESSION['usuario_
                 : null;
 $filtraFornecedor = ($fornecedorId !== null);
 
-// Cliente não acessa gestão de produtos
 if ($tipo === 'cliente') {
     header('Location: ' . BASE_URL . '/public/index.php');
     exit;
@@ -50,7 +49,6 @@ function escreveLinhasProdutos($produtos, $isFornecedor) {
     }
 }
 
-// Requisição AJAX — respeita filtro de fornecedor
 if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
     $termo = isset($_GET['pesquisa']) ? trim($_GET['pesquisa']) : '';
     if ($filtraFornecedor) {
@@ -121,7 +119,6 @@ if ($totalPaginas > 1) {
 }
 echo "</div>";
 
-// Fornecedor pode cadastrar novo produto (já virá vinculado ao seu ID)
 echo "<a href='" . BASE_URL . "/views/cadastro/form_produto.php' class='btn btn-primary left-margin'>Novo</a>";
 
 echo "</section>";

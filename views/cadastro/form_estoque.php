@@ -143,7 +143,6 @@ if ($erro && isset($erros[$erro])) {
     preco.addEventListener('blur', function(){
         var v = this.value.trim();
         if (v === '') return;
-        // Ensure only one dot and valid numeric string
         v = v.replace(/,/g, '.');
         v = v.replace(/[^0-9.]/g, '');
         var parts = v.split('.');

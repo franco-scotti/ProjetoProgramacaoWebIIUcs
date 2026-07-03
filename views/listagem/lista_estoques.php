@@ -44,11 +44,9 @@ function escreveLinhasEstoques($estoques, $isFornecedor) {
     }
 }
 
-// AJAX — filtro textual respeitando fornecedor
 if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
     $termo = isset($_GET['pesquisa']) ? trim($_GET['pesquisa']) : '';
     if ($filtraFornecedor) {
-        // Busca estoques do fornecedor e filtra pelo termo em PHP
         $estoques = $dao->buscaPorFornecedorId($fornecedorId);
         if ($termo !== '') {
             $termoLower = strtolower($termo);
