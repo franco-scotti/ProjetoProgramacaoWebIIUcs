@@ -32,7 +32,6 @@ if ($id) {
     if ($produto && $produto->getFornecedor()) {
         $prodFornId = (int)$produto->getFornecedor()->getId();
 
-        // Fornecedor não pode editar produto de outro fornecedor
         if (!$isAdmin && $fornecedorId !== null && $prodFornId !== $fornecedorId) {
             header('Location: ' . BASE_URL . '/views/listagem/lista_produtos.php?erro=sem_permissao');
             exit;

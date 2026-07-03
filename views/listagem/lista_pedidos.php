@@ -23,7 +23,6 @@ include_once dirname(__DIR__, 2) . "/routes/fachada.php";
 $dao   = $factory->getPedidoDao();
 $termo = trim((string)($_GET['pesquisa'] ?? ''));
 
-// AJAX: retorna só as linhas da tabela
 function linhasPedidos($pedidos, $isFornecedor, $isAdmin) {
     if (!$pedidos) {
         echo "<tr><td colspan='7'>Nenhum pedido encontrado.</td></tr>";
@@ -40,7 +39,7 @@ function linhasPedidos($pedidos, $isFornecedor, $isAdmin) {
         echo "<td><span class='label label-{$badge}'>{$sit}</span></td>";
         echo "<td>{$clienteNome}</td>";
         echo "<td>";
-        echo "<a href='" . BASE_URL . "/views/detalhes/mostra_pedido.php?id={$pedido->getId()}' class='btn btn-primary btn-xs left-margin'><span class='glyphicon glyphicon-list'></span> Detalhe</a>";
+        echo "<a href='" . BASE_URL . "/pedido/{$pedido->getId()}' class='btn btn-primary btn-xs left-margin'><span class='glyphicon glyphicon-list'></span> Detalhe</a>";
         if ($isAdmin || $isFornecedor) {
             echo "<a href='" . BASE_URL . "/views/cadastro/form_pedido.php?id={$pedido->getId()}' class='btn btn-info btn-xs left-margin'><span class='glyphicon glyphicon-edit'></span> Altera</a>";
         }
@@ -63,7 +62,6 @@ if (isset($_GET['ajax']) && $_GET['ajax'] == '1') {
     exit;
 }
 
-// Paginação — só para admins sem pesquisa ativa
 $itensPorPagina = 10;
 $paginaAtual    = max(1, (int)($_GET['pagina'] ?? 1));
 
