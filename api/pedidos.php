@@ -1,15 +1,4 @@
 <?php
-/**
- * API REST — Pedidos
- *
- * GET /api/pedidos.php              → lista todos os pedidos
- * GET /api/pedidos.php?numero=1234  → filtra por número do pedido
- * GET /api/pedidos.php?cliente=Ana  → filtra por nome do cliente
- * GET /api/pedidos.php?id=5         → detalhe de um pedido (com itens)
- *
- * Respostas sempre em JSON com CORS liberado para uso via plugin REST.
- */
-
 if (!defined('BASE_URL')) {
     define('BASE_URL', '/ProjetoProgramacaoWebIIUcs');
 }

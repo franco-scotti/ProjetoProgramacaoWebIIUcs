@@ -68,6 +68,26 @@ if ($situacao === 'ENTREGUE') {
     $dataEntrega = trim((string)($_POST['data_entrega'] ?? ''));
 }
 
+if ($situacao === 'CANCELADO' && $pedidoOriginal->getSituacao() !== 'CANCELADO') {
+    $conn = $factory->getConnection();
+    $stmtItems = $conn->prepare(
+        "SELECT ip.produto_id, ip.quantidade, e.id AS estoque_id, e.quantidade AS estoque_quantidade
+         FROM item_pedido ip
+         INNER JOIN estoque e ON e.produto_id = ip.produto_id
+         WHERE ip.pedido_id = :pedido_id"
+    );
+    $stmtItems->bindValue(':pedido_id', $id, PDO::PARAM_INT);
+    $stmtItems->execute();
+
+    $updateEstoque = $conn->prepare("UPDATE estoque SET quantidade = :quantidade WHERE id = :id");
+    while ($itemRow = $stmtItems->fetch(PDO::FETCH_ASSOC)) {
+        $newQuantidade = (int)$itemRow['estoque_quantidade'] + (int)$itemRow['quantidade'];
+        $updateEstoque->bindValue(':quantidade', $newQuantidade, PDO::PARAM_INT);
+        $updateEstoque->bindValue(':id', (int)$itemRow['estoque_id'], PDO::PARAM_INT);
+        $updateEstoque->execute();
+    }
+}
+
 $pedido = new Pedido($id, $numero, $dataPedido, $dataEntrega ?: null, $situacao);
 if ($clienteId !== '') {
     $pedido->setCliente(new Cliente($clienteId, '', '', '', ''));

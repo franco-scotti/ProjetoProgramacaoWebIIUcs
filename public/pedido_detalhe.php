@@ -32,7 +32,7 @@ if (!$pedido) {
 
 $items = [];
 $stmt = $pdo->prepare(
-    "SELECT ip.quantidade, ip.preco, pr.nome AS produto_nome, pr.descricao AS produto_descricao
+    "SELECT ip.id, ip.produto_id, ip.quantidade, ip.preco, pr.nome AS produto_nome, pr.descricao AS produto_descricao
      FROM item_pedido ip
      LEFT JOIN produto pr ON pr.id = ip.produto_id
      WHERE ip.pedido_id = :pedido_id"
@@ -42,6 +42,9 @@ $stmt->execute();
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $items[] = $row;
 }
+
+$canEditItems = !in_array($pedido['situacao'], ['CANCELADO', 'ENTREGUE']);
+$erro = $_GET['erro'] ?? '';
 
 include_once dirname(__DIR__) . "/views/layout/layout_header.php";
 ?>
@@ -56,6 +59,12 @@ include_once dirname(__DIR__) . "/views/layout/layout_header.php";
         <p><strong>Status:</strong> <?php echo htmlspecialchars($pedido['situacao']); ?></p>
     </div>
 
+    <?php if ($erro === 'estoque_insuficiente'): ?>
+        <div class="alert alert-danger">Não há estoque suficiente para aumentar essa quantidade.</div>
+    <?php elseif ($erro === 'sem_permissao'): ?>
+        <div class="alert alert-danger">Você não tem permissão para alterar este item.</div>
+    <?php endif; ?>
+
     <?php if ($items) { ?>
         <table class="table table-bordered">
             <thead>
@@ -65,6 +74,7 @@ include_once dirname(__DIR__) . "/views/layout/layout_header.php";
                     <th>Quantidade</th>
                     <th>Preço</th>
                     <th>Subtotal</th>
+                    <?php if ($canEditItems): ?><th>Ação</th><?php endif; ?>
                 </tr>
             </thead>
             <tbody>
@@ -74,9 +84,24 @@ include_once dirname(__DIR__) . "/views/layout/layout_header.php";
                     <tr>
                         <td><?php echo htmlspecialchars($item['produto_nome']); ?></td>
                         <td><?php echo htmlspecialchars($item['produto_descricao']); ?></td>
-                        <td><?php echo (int)$item['quantidade']; ?></td>
+                        <td>
+                            <?php if ($canEditItems): ?>
+                                <form action="<?= BASE_URL ?>/app/controllers/altera/altera_item_pedido.php" method="get" style="display:inline-flex; align-items:center; gap:6px;">
+                                    <input type="hidden" name="id" value="<?= (int)$item['id'] ?>">
+                                    <input type="hidden" name="pedido_id" value="<?= (int)$pedidoId ?>">
+                                    <input type="hidden" name="produto_id" value="<?= (int)$item['produto_id'] ?>">
+                                    <input type="hidden" name="preco" value="<?= htmlspecialchars($item['preco']) ?>">
+                                    <input type="number" name="quantidade" min="1" value="<?= (int)$item['quantidade'] ?>" class="form-control" style="width:100px; display:inline-block;">
+                        </td>
                         <td>R$ <?php echo number_format($item['preco'], 2, ',', '.'); ?></td>
                         <td>R$ <?php echo number_format($subtotal, 2, ',', '.'); ?></td>
+                        <td>
+                                    <button type="submit" class="btn btn-primary btn-sm">Salvar</button>
+                                </form>
+                            <?php else: ?>
+                                <?php echo (int)$item['quantidade']; ?>
+                            <?php endif; ?>
+                        </td>
                     </tr>
                 <?php } ?>
             </tbody>
